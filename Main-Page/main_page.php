@@ -26,29 +26,37 @@ $semesterCount = $student->semesterCount;
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            let selectedSem;
+            let selectSem;
             let selectSub;
             $("#semSelect").change(function() {
                 $("#select").hide();
-                selectedSem = parseInt($(this).val());
-                console.log(selectedSem);
+                selectSem = parseInt($(this).val());
+                console.log(selectSem);
+                // Passing arrays from php to js
                 let semesterCount = `<?php echo $semesterCount; ?>`;
-                // console.log("maxClasses", maxClasses);
-                for (let i = 0; i < semesterCount; i++) {
-                    $(`#subSelect${i}`).hide();
+                let subjectName = JSON.parse('<?php echo $student->jsonEncoder($student->subjectName); ?>')
+                let subjectCode = JSON.parse('<?php echo $student->jsonEncoder($student->subjectCode); ?>')
+                let maxClasses = JSON.parse('<?php echo $student->jsonEncoder($student->maxClasses); ?>')
+                let minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>')
+
+                //Deals with generating second drop down to select subjects
+                let selectElementId = $('#subSelect');
+                selectElementId.show();
+
+                if (selectElementId.find('option').length > 1) {
+                    selectElementId.empty();
                 }
-                $(`#subSelect${selectedSem}`).show();
-                $(`#subSelect${selectedSem}`).val("Select a Subject");
+                for (let i = 0; i < subjectName[selectSem - 1].length; i++) {
+                    let option = $('<option>');
+                    option.text(subjectName[selectSem - 1][i]);
+                    option.val(i);
+                    selectElementId.append(option);
+                }
+                selectElementId.change(function() {
+                    selectSub = parseInt($(this).val());
+                    console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
+                })
 
-            });
-
-            $("#valueSubmit").click(function() {
-                let student_details = {
-                    semester: selectedSem,
-                    subject: selectSub
-                };
-                console.log(student_details);
-                $("#tableDiv").load("tableConstruct.php", student_details)
             });
         })
     </script>
@@ -64,24 +72,9 @@ $semesterCount = $student->semesterCount;
         }
         ?>
     </select>
-    <?php
-    // if (isset($_POST["selectedSemester"])) {
-    //     $semester = $_POST["selectedSemester"];
-    //     // $semester = 1;
-    //     echo "<select id='subSelect" . $semester . "' style='display: none;'>";
-    //     $student->getSubjectdetails($semester);
-    //     $subjectCode = $student->subjectCode;
-    //     $subjectName = $student->subjectName;
-    //     $subjectCount = count($subjectCode);
-    //     for ($i = 0; $i < $subjectCount; $i++) {
-    //         // store subject codes and subject names in an arrray
-    //         echo "<option value='" . $subjectCode[$i] . "'>" . $subjectName[$i] . " " . $subjectCode[$i] . "</option>";
-    //     }
-
-    //     echo "</select>";
-    //     // echo strip_tags($semester);
-    // }
-    ?>
+    <select id='subSelect' style='display: none;width : 150px'>
+        <option id="selectHide" value="">Select a subject</option>
+    </select>
     <br><br>
     <button id="valueSubmit" style="display: none;">Submit</button>
     <div id="tableDiv"></div>
