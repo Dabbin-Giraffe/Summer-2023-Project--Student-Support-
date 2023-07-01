@@ -61,16 +61,31 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 //     echo "suc <br/>";
 // }
 
-$stmt = $conn->prepare("SELECT u.firstName,u.lastName,u.flag,f.role FROM user u JOIN flag f ON u.flag = f.flag WHERE u.email = ?");
-$email = "lorem@ipsum.com";
-$stmt->bind_param("s",$email);
-$stmt->execute();
-$stmt->bind_result($firstName,$lastName,$flag,$role);
+// $stmt = $conn->prepare("SELECT u.firstName,u.lastName,u.flag,f.role FROM user u JOIN flag f ON u.flag = f.flag WHERE u.email = ?");
+// $email = "lorem@ipsum.com";
+// $stmt->bind_param("s",$email);
+// $stmt->execute();
+// $stmt->bind_result($firstName,$lastName,$flag,$role);
 
-if($stmt->fetch()){
-    echo "First Name ".$firstName."<br/>";
-    echo "First Name ".$lastName."<br/>";
-    echo "First Name ".$flag."<br/>";
-    echo "First Name ".$role."<br/>";
-}
+// if($stmt->fetch()){
+//     echo "First Name ".$firstName."<br/>";
+//     echo "First Name ".$lastName."<br/>";
+//     echo "First Name ".$flag."<br/>";
+//     echo "First Name ".$role."<br/>";
+// }
 
+// $dates = ["2022-11-09", "2022-11-10", "2022-11-11", "2022-11-12", "2022-11-13"];
+// $firstSemsubjects = ["MA1101", "EC1101"];
+// $secondSemsubjects = ["CS1201", "CE1201", "CS1203", "HS1201"];
+// $attendence = [0, 0, 0, 0, 1];
+
+// $stmt = $conn->prepare("INSERT INTO attendence (studentID,date,attendence,subjectID,semester) VALUES ('SE21UCSE198',?,?,?,2)");
+// $stmt->bind_param("sis", $date, $attend, $subject);
+
+// for ($i = 0; $i < count($dates); $i++) {
+//     $subject = "MA1201";
+//     $attend = $attendence[$i];
+//     $date = $dates[$i];
+//     $stmt->execute();
+//     echo "suc";
+// }

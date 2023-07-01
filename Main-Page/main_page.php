@@ -5,7 +5,7 @@ include_once "connect.php";
 ?>
 
 <?php
-$email = $_SESSION["email"] = "lorem@ipsum.com";
+$email = $_SESSION["email"] = "se21ucse198@mahindrauniversity.edu.in";
 $student = new Student($email, $conn);
 $_SESSION["id"] = $student->id;
 
@@ -25,6 +25,12 @@ $semesterCount = $student->semesterCount;
     <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
+        let semesterCount;
+        let subjectName;
+        let subjectCode;
+        let maxClasses;
+        let minimumRequired;
+
         $(document).ready(function() {
             let selectSem;
             let selectSub;
@@ -33,15 +39,16 @@ $semesterCount = $student->semesterCount;
                 selectSem = parseInt($(this).val());
                 console.log(selectSem);
                 // Passing arrays from php to js
-                let semesterCount = `<?php echo $semesterCount; ?>`;
-                let subjectName = JSON.parse('<?php echo $student->jsonEncoder($student->subjectName); ?>')
-                let subjectCode = JSON.parse('<?php echo $student->jsonEncoder($student->subjectCode); ?>')
-                let maxClasses = JSON.parse('<?php echo $student->jsonEncoder($student->maxClasses); ?>')
-                let minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>')
+                semesterCount = `<?php echo $semesterCount; ?>`;
+                subjectName = JSON.parse('<?php echo $student->jsonEncoder($student->subjectName); ?>')
+                subjectCode = JSON.parse('<?php echo $student->jsonEncoder($student->subjectCode); ?>')
+                maxClasses = JSON.parse('<?php echo $student->jsonEncoder($student->maxClasses); ?>')
+                minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>')
 
                 //Deals with generating second drop down to select subjects
-                let selectElementId = $('#subSelect');
-                selectElementId.show();
+                // let selectElementId = $('#subSelect');
+                // selectElementId.show();
+                $("#subSelect").show();
 
                 if (selectElementId.find('option').length > 1) {
                     selectElementId.empty();
@@ -52,12 +59,28 @@ $semesterCount = $student->semesterCount;
                     option.val(i);
                     selectElementId.append(option);
                 }
-                selectElementId.change(function() {
-                    selectSub = parseInt($(this).val());
-                    console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
-                })
-
             });
+            let selectElementId = $("#subSelect");
+            selectElementId.change(function() {
+                selectSub = parseInt($(this).val());
+                console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
+                if (selectSub != NaN && selectSem != NaN) {
+                    $("#valueSubmit").show();
+                }
+                console.log(typeof subjectCode);
+            })
+            $("#valueSubmit").click(function() {
+                let details = {
+                    selectSem: selectSem,
+                    selectSub: selectSub,
+                    subjectCode: JSON.stringify(subjectCode),
+                    subjectName: JSON.stringify(subjectName),
+                    maxClasses: JSON.stringify(maxClasses),
+                    minimumRequired: JSON.stringify(minimumRequired)
+                }
+                $("#tableDiv").load("tableConstruct.php", details);
+            })
+
         })
     </script>
 

@@ -1,29 +1,74 @@
 <?php
+session_start();
+$selectSem = $_POST["selectSem"];
+$selectSub = $_POST["selectSub"];
+$subjectCode = json_decode($_POST["subjectCode"]);
+$subjectName = json_decode($_POST["subjectName"]);
+$maxClasses = json_decode($_POST["maxClasses"]);
+$minimumRequired = json_decode($_POST["minimumRequired"]);
+$id = $_SESSION["id"];
 
-// include_once "D:\Summer Project - Student Support\Main-Page\connect.php";
+$semester = $selectSem;
+$subjectid = $subjectCode[$selectSem - 1][$selectSub];
+$subjectname = $subjectName[$selectSem - 1][$selectSub];
+$minimumrequired = $minimumRequired[$selectSem - 1][$selectSub];
+$maxclasses = $maxClasses[$selectSem - 1][$selectSub];
 
-$semester = $_POST["semester"];
-$subject = $_POST["subject"];
-$studentName = "lorem";
+include_once "connect.php";
+$stmt = $conn->prepare("SELECT attendence FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
+$stmt->bind_param("iss", $semester, $subjectid, $id);
+$stmt->execute();
+$stmt->bind_result($attendence);
+while ($stmt->fetch()) {
+    $attendeceArr[] = $attendence;
+}
+$stmt->close();
 
-// $stmt = $conn->prepare("SELECT * FROM attendencedata WHERE subject = ? AND semester = ? AND studentName = ?");
-// $stmt->bind_param("sis",$semester,$subject,$studentName);
-// $stmt->execute();
-// $stmt->bind_result($subjectFetch,$semesterFetch,$attendenceFetch,$nameFetch);
-// $stmt->fetch();
+$present = 0;
+foreach ($attendeceArr as $value) {
+    if ($value) {
+        $present++;
+    }
+}
 
-// $stmt = $conn->prepare("SELECT * FROM attendencedata WHERE subject = ? AND semester = ? AND studentName = ?");
-// $stmt->bind_param("sis", $subject, $semester, $studentName);
-// $stmt->execute();
-// $stmt->bind_result($subjectFetch,$semesterFetch,$attendenceFetch,$nameFetch);
 
-$nameFetch = "lorem";
-$subjectFetch = "CS1201";
-$semesterFetch = 2;
-$attendenceFetch = 69;
+$stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
+$stmt->bind_param("iss", $semester, $subjectid, $id);
+$stmt->execute();
+$stmt->bind_result($classesConducted);
+$stmt->fetch();
+$stmt->close();
 
-// while($stmt->fetch()){
-echo "<table><tr><th>Student Name</th><th>Subject</th><th>Semester</th><th>Attendence</th></tr>";
-echo "<tr><td>".$nameFetch."</td><td>".$subjectFetch."</td><td>".$semesterFetch."</td><td>".$attendenceFetch."</td></tr></table>";
+$presentPercentage = round(($present / $classesConducted) * 100, 2);
 
-// }
+$userDetails = [
+    'subjectid' => $subjectid,
+    'subjectname' => $subjectname,
+    'present' => $present,
+    'classesConducted' => $classesConducted,
+    'presentPercentage' => $presentPercentage,
+    'minimumrequired' => $minimumrequired,
+    'maxclasses' => $maxclasses
+];
+
+?>
+
+<table>
+    <tr>
+        <th>Subject Code</th>
+        <th>Subject Name</th>
+        <th>Classes Attended</th>
+        <th>Classes Conducted</th>
+        <th>Attendence Percentage</th>
+        <th>Minimum Required Percentage</th>
+        <th>Maximum Classes planned for Semester</th>
+    </tr>
+    <tr>
+        <?php
+        foreach ($userDetails as $key => $value) {
+
+            echo "<td>" . $value . "</td>";
+        }
+        ?>
+    </tr>
+</table>
