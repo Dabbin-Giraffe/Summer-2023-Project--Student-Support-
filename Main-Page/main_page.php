@@ -46,8 +46,6 @@ $semesterCount = $student->semesterCount;
                 minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>')
 
                 //Deals with generating second drop down to select subjects
-                // let selectElementId = $('#subSelect');
-                // selectElementId.show();
                 $("#subSelect").show();
 
                 if (selectElementId.find('option').length > 1) {
@@ -62,6 +60,7 @@ $semesterCount = $student->semesterCount;
             });
             let selectElementId = $("#subSelect");
             selectElementId.change(function() {
+                $("#selectHide").hide();
                 selectSub = parseInt($(this).val());
                 console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
                 if (selectSub != NaN && selectSem != NaN) {
@@ -78,7 +77,13 @@ $semesterCount = $student->semesterCount;
                     maxClasses: JSON.stringify(maxClasses),
                     minimumRequired: JSON.stringify(minimumRequired)
                 }
-                $("#tableDiv").load("tableConstruct.php", details);
+
+                $("#tableDiv").load("subjectTable.php", details);
+                $("#tableDiv").show();
+                
+                $("#logDiv").load("attendencelog.php",details);
+                $("#logDiv").show();
+
             })
 
         })
@@ -95,12 +100,14 @@ $semesterCount = $student->semesterCount;
         }
         ?>
     </select>
-    <select id='subSelect' style='display: none;width : 150px'>
+    <select id='subSelect' style='display: none;width : 150px;'>
         <option id="selectHide" value="">Select a subject</option>
     </select>
     <br><br>
     <button id="valueSubmit" style="display: none;">Submit</button>
-    <div id="tableDiv"></div>
+    <div id="tableDiv" style="display : none;border : 2px solid black"></div>
+    <div id="logDiv" style="display:none;margin : 10px;"></div>
+
 </body>
 
 </html>
