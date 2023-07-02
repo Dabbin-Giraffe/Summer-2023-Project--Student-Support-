@@ -51,6 +51,8 @@ $userDetails = [
     'maxclasses' => $maxclasses
 ];
 
+$_SESSION["classesConducted"] = $classesConducted;
+
 ?>
 
 <table>
@@ -66,7 +68,6 @@ $userDetails = [
     <tr>
         <?php
         foreach ($userDetails as $key => $value) {
-
             echo "<td>" . $value . "</td>";
         }
         ?>

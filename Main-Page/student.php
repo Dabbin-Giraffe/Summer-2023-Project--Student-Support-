@@ -16,7 +16,6 @@ class Student
     public $subjectName;
     public $minimumRequired;
     public $maxClasses;
-
     private $conn;
 
 
@@ -68,5 +67,49 @@ class Student
     public function jsonEncoder($arr)
     {
         return json_encode($arr);
+    }
+    public function getAttendencedetails($selectSem, $selectSub)
+    {
+        $subjectid = $this->subjectCode[$selectSem - 1][$selectSub];
+        $subjectname = $this->subjectName[$selectSem - 1][$selectSub];
+        $minimumrequired = $this->minimumRequired[$selectSem - 1][$selectSub];
+        $maxclasses = $this->maxClasses[$selectSem - 1][$selectSub];
+
+        $attendence = 0;
+        $classesConducted = 0;
+        $present = 0;
+
+        $stmt = ($this->conn)->prepare("SELECT attendence FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
+        $stmt->bind_param("iss", $selectSem, $subjectid, $this->id);
+        $stmt->execute();
+        $stmt->bind_result($attendence);
+        while ($stmt->fetch()) {
+            $attendeceArr[] = $attendence;
+            if ($attendence) {
+                $present++;
+            }
+        }
+        $stmt->close();
+
+        $stmt = ($this->conn)->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
+        $stmt->bind_param("iss", $this->semester, $subjectid, $this->id);
+        $stmt->execute();
+        $stmt->bind_result($classesConducted);
+        $stmt->fetch();
+        $stmt->close();
+
+        $presentPercentage = round(($present / $classesConducted) * 100, 2);
+
+        $userDetails = [
+            'subjectID' => $subjectid,
+            'subjectName' => $subjectname,
+            'present' => $present,
+            'classesConducted' => $classesConducted,
+            'presentPercentage' => $presentPercentage,
+            'minimumRequired' => $minimumrequired,
+            'maxClasses' => $maxclasses
+        ];
+
+        return $userDetails;
     }
 }
