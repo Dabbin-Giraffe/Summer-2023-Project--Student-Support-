@@ -48,8 +48,8 @@ $semesterCount = $student->semesterCount;
                 //Deals with generating second drop down to select subjects
                 $("#subSelect").show();
 
-                if (selectElementId.find('option').length > 1) {
-                    selectElementId.empty();
+                if (selectElementId.find('option').length > 2) {
+                    selectElementId.find('option:not(#all)').remove();
                 }
                 for (let i = 0; i < subjectName[selectSem - 1].length; i++) {
                     let option = $('<option>');
@@ -62,7 +62,8 @@ $semesterCount = $student->semesterCount;
             selectElementId.change(function() {
                 $("#selectHide").hide();
                 selectSub = parseInt($(this).val());
-                console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
+                // console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
+                console.log(selectSem, " ", selectSub);
                 if (selectSub != NaN && selectSem != NaN) {
                     $("#valueSubmit").show();
                 }
@@ -77,15 +78,15 @@ $semesterCount = $student->semesterCount;
                     maxClasses: JSON.stringify(maxClasses),
                     minimumRequired: JSON.stringify(minimumRequired)
                 }
-
-                $("#tableDiv").load("subjectTable.php", details);
+                $("#logDiv").empty();
+                $("#tableDiv").load("coursetable.php", details)
                 $("#tableDiv").show();
-                
-                $("#logDiv").load("attendencelog.php",details);
-                $("#logDiv").show();
 
+                if (selectSub != -1) {
+                    $("#logDiv").load("attendencelog.php", details);
+                    $("#logDiv").show();
+                }
             })
-
         })
     </script>
 
@@ -102,6 +103,7 @@ $semesterCount = $student->semesterCount;
     </select>
     <select id='subSelect' style='display: none;width : 150px;'>
         <option id="selectHide" value="">Select a subject</option>
+        <option value="-1" id="all">All</option>
     </select>
     <br><br>
     <button id="valueSubmit" style="display: none;">Submit</button>
