@@ -17,7 +17,11 @@ $stmt->execute();
 $stmt->bind_result($date, $attendence);
 
 $result = [];
+$present = 0;
 while ($stmt->fetch()) {
+    if ($attendence == 1) {
+        $present++;
+    }
     $result[] = [
         'date' => $date,
         'attendence' => $attendence
@@ -32,6 +36,8 @@ $stmt->close();
     <tr>
         <th>Date</th>
         <th>Attendence Status</th>
+        <th>Attendended Classes</th>
+        <th>Attendence Percent</th>
         <th>Class Number</th>
     </tr>
 
@@ -41,9 +47,16 @@ $stmt->close();
         echo "<td>" . $value["date"] . "</td>";
         if ($value["attendence"] == 1) {
             echo "<td>present</td>";
-        }else{
+            echo "<td>" . $present . "</td>";
+            echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
+            $present--;
+        } else {
+            // $present -= 2;
             echo "<td>Absent</td>";
+            echo "<td>" . $present . "</td>";
+            echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
         }
+        // echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
         echo "<td>" . $classesConducted-- . "</td>";
     }
     ?>
