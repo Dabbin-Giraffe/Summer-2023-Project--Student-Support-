@@ -10,12 +10,7 @@ $subjectName = json_decode($_POST["subjectName"]);
 $maxClasses = json_decode($_POST["maxClasses"]);
 $minimumRequired = json_decode($_POST["minimumRequired"]);
 $id = $_SESSION["id"];
-
-
-
-
 ?>
-
 <table>
     <tr>
         <th>Subject Code</th>
@@ -37,8 +32,6 @@ $id = $_SESSION["id"];
     }
     ?>
 </table>
-
-
 <?php
 function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i)
 {

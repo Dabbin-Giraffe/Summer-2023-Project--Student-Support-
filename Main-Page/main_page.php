@@ -3,7 +3,6 @@ session_start();
 include "student.php";
 include_once "connect.php";
 ?>
-
 <?php
 $email = $_SESSION["email"] = "se21ucse198@mahindrauniversity.edu.in";
 $student = new Student($email, $conn);
@@ -46,10 +45,9 @@ $semesterCount = $student->semesterCount;
                 minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>')
 
                 //Deals with generating second drop down to select subjects
-                $("#subSelect").show();
 
                 if (selectElementId.find('option').length > 2) {
-                    selectElementId.find('option:not(#all)').remove();
+                    selectElementId.find('option:not(#all,#selectHide)').remove();
                 }
                 for (let i = 0; i < subjectName[selectSem - 1].length; i++) {
                     let option = $('<option>');
@@ -57,6 +55,7 @@ $semesterCount = $student->semesterCount;
                     option.val(i);
                     selectElementId.append(option);
                 }
+                $("#subSelect").show();
             });
             let selectElementId = $("#subSelect");
             selectElementId.change(function() {
@@ -64,29 +63,62 @@ $semesterCount = $student->semesterCount;
                 selectSub = parseInt($(this).val());
                 // console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
                 console.log(selectSem, " ", selectSub);
-                if (selectSub != NaN && selectSem != NaN) {
-                    $("#valueSubmit").show();
-                }
+                // if (selectSub != NaN && selectSem != NaN) {
+                //     $("#valueSubmit").show();
+                // }
                 console.log(typeof subjectCode);
-            })
-            $("#valueSubmit").click(function() {
                 let details = {
                     selectSem: selectSem,
                     selectSub: selectSub,
                     subjectCode: JSON.stringify(subjectCode),
                     subjectName: JSON.stringify(subjectName),
                     maxClasses: JSON.stringify(maxClasses),
-                    minimumRequired: JSON.stringify(minimumRequired)
+                    minimumRequired: JSON.stringify(minimumRequired),
+                    fullLog: 0
                 }
                 $("#logDiv").empty();
                 $("#tableDiv").load("coursetable.php", details)
                 $("#tableDiv").show();
 
                 if (selectSub != -1) {
-                    $("#logDiv").load("attendencelog.php", details);
-                    $("#logDiv").show();
+                    $("#logDiv").load("attendencelog.php", details, function() {
+                        $("#logDiv").show();
+                        var fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
+                        $("#logDiv").append(fullLogButton);
+                        $("#fullLog").click(function() {
+                            let details = {
+                                selectSem: selectSem,
+                                selectSub: selectSub,
+                                subjectCode: JSON.stringify(subjectCode),
+                                subjectName: JSON.stringify(subjectName),
+                                maxClasses: JSON.stringify(maxClasses),
+                                minimumRequired: JSON.stringify(minimumRequired),
+                                fullLog: 1
+                            }
+                            $("#logDiv").load("attendencelog.php", details)
+
+                        })
+                    });
                 }
             })
+            // $("#valueSubmit").click(function() {
+            //     let details = {
+            //         selectSem: selectSem,
+            //         selectSub: selectSub,
+            //         subjectCode: JSON.stringify(subjectCode),
+            //         subjectName: JSON.stringify(subjectName),
+            //         maxClasses: JSON.stringify(maxClasses),
+            //         minimumRequired: JSON.stringify(minimumRequired)
+            //     }
+            //     $("#logDiv").empty();
+            //     $("#tableDiv").load("coursetable.php", details)
+            //     $("#tableDiv").show();
+
+            //     if (selectSub != -1) {
+            //         $("#logDiv").load("attendencelog.php", details);
+            //         $("#logDiv").show();
+            //     }
+            // })
         })
     </script>
 
@@ -108,7 +140,9 @@ $semesterCount = $student->semesterCount;
     <br><br>
     <button id="valueSubmit" style="display: none;">Submit</button>
     <div id="tableDiv" style="display : none;border : 2px solid black"></div>
-    <div id="logDiv" style="display:none;margin : 10px;"></div>
+    <div id="logDiv" style="display:none;margin : 10px;">
+        <button>hi</button>
+    </div>
 
 </body>
 

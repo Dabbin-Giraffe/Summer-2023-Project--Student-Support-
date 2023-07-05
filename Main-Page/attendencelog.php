@@ -1,18 +1,34 @@
 <?php
 session_start();
+include_once "connect.php";
 $selectSem = $_POST["selectSem"];
 $selectSub = $_POST["selectSub"];
 $subjectCode = json_decode($_POST["subjectCode"]);
 $id = $_SESSION["id"];
 $subjectid = $subjectCode[$selectSem - 1][$selectSub];
-$classesConducted = $_SESSION["classesConducted"];
+$fullLog = $_POST["fullLog"];
+
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
+$stmt->bind_param("iss", $selectSem, $subjectCode[$selectSem - 1][$selectSub], $id);
+$stmt->execute();
+$stmt->bind_result($classesConducted);
+$stmt->fetch();
+
+
+$stmt->close();
+
 
 $date = [];
 $attendence = [];
+if($fullLog){
+    $limit = $classesConducted;
+}else{
+    $limit = 3;
+}
 
-include_once "connect.php";
-$stmt = $conn->prepare("SELECT date,attendence FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ? ORDER BY date DESC LIMIT 10");
-$stmt->bind_param("iss", $selectSem, $subjectid, $id);
+$stmt = $conn->prepare("SELECT date,attendence FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ? ORDER BY date DESC LIMIT ?");
+$stmt->bind_param("issi", $selectSem, $subjectid, $id, $limit);
 $stmt->execute();
 $stmt->bind_result($date, $attendence);
 
