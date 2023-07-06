@@ -38,7 +38,7 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 // $stmt = "UPDATE attendence SET semester=2 WHERE id = 4";
 // $stmt = "INSERT INTO flag (flag,role) VALUES ('1','2022')";
 
-// $stmt = "INSERT INTO subject (subjectCode,subjectName,flag,semester) VALUES ('CS1101','Computer Science',1,1)";
+// $stmt = "C;
 // $stmt = "INSERT INTO subject (subjectCode,subjectName,flag,semester) VALUES ('MA1101','Maths',1,1)";
 // $stmt = "INSERT INTO subject (subjectCode,subjectName,flag,semester) VALUES ('EC1101','Electronics',1,1)";
 // $stmt = "INSERT INTO subject (subjectCode,subjectName,flag,semester) VALUES ('CS1201','Computer Science',1,2)";
@@ -88,4 +88,17 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 //     $date = $dates[$i];
 //     $stmt->execute();
 //     echo "suc";
-// }
+// // }
+
+// $stmt = "DROP TABLE attendencerequired";
+
+// $stmt = "ALTER TABLE user ADD COLUMN isStudent BOOL";
+// $stmt = "UPDATE user SET isStudent=1 WHERE userID = 'SE21UCSE198'";
+// $stmt = "INSERT INTO user (email,password,firstName,lastName,flag,userID,isStudent) VALUES ('FC123@mahindrauniversity.edu.in','1234','dolor','sit',0,'FC123',0)";
+// $stmt = "INSERT INTO user (email,password,firstName,lastName,flag,userID,isStudent) VALUES ('FC124@mahindrauniversity.edu.in','1234','amet','emet',0,'FC124',0)";
+
+// $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC124',1,'CS1101')";
+// $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC124',1,'MA1101')";
+// $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC123',1,'CS1201')";
+// $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC123',1,'MA1201')";
+if($conn->query($stmt)){echo "suc";}

@@ -14,7 +14,7 @@ class Student
     public $subjectName;
     public $minimumRequired;
     public $maxClasses;
-    private $conn;
+    public $conn;
 
 
     function __construct($email, $conn)
@@ -23,11 +23,11 @@ class Student
         $this->id = strtoupper(explode("@", $email)[0]);
         $this->conn = $conn;
 
-        $this->getStudentdetails();
+        $this->getUserdetails();
         $this->getSemesterdetails();
         $this->getSubjectdetails();
     }
-    private function getStudentdetails()
+    public function getUserdetails()
     {
         $stmt = ($this->conn)->prepare("SELECT u.firstName,u.lastName,u.flag,f.role FROM user u JOIN flag f ON u.flag = f.flag WHERE u.email = ?");
         $stmt->bind_param("s", $this->email);

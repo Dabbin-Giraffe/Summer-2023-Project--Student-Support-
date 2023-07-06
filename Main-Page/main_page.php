@@ -36,7 +36,6 @@ $semesterCount = $student->semesterCount;
             $("#semSelect").change(function() {
                 $("#select").hide();
                 selectSem = parseInt($(this).val());
-                console.log(selectSem);
                 // Passing arrays from php to js
                 semesterCount = `<?php echo $semesterCount; ?>`;
                 subjectName = JSON.parse('<?php echo $student->jsonEncoder($student->subjectName); ?>')
@@ -61,12 +60,7 @@ $semesterCount = $student->semesterCount;
             selectElementId.change(function() {
                 $("#selectHide").hide();
                 selectSub = parseInt($(this).val());
-                // console.log("selectedsub", subjectName[selectSem - 1][selectSub], " ", subjectCode[selectSem - 1][selectSub]);
-                console.log(selectSem, " ", selectSub);
-                // if (selectSub != NaN && selectSem != NaN) {
-                //     $("#valueSubmit").show();
-                // }
-                console.log(typeof subjectCode);
+
                 let details = {
                     selectSem: selectSem,
                     selectSub: selectSub,
@@ -80,45 +74,41 @@ $semesterCount = $student->semesterCount;
                 $("#tableDiv").load("coursetable.php", details)
                 $("#tableDiv").show();
 
+                if (selectSub == -1) {
+                    $(document).on("click", ".subjectLog", function() {
+                        $("#logDiv").empty();
+                        let subCode = $(this).attr("id");
+                        subLogIndex = subjectCode[selectSem - 1].indexOf(subCode);
+                        let logDetails = details;
+                        logDetails["selectSub"] = subLogIndex;
+                        logDetails["fullLog"] = 0;
+                        $("#logDiv").load("attendencelog.php", logDetails, function() {
+                            console.log(logDetails);
+                            $("#logDiv").show();
+                            var fullLogButton = $("<button>").attr("id", "fullLogAll").text("View full Log");
+                            $("#logDiv").append(fullLogButton);
+                            $("#fullLogAll").click(function() {
+                                
+                                logDetails["selectSub"] = subLogIndex;
+                                logDetails["fullLog"] = 1;
+                                $("#logDiv").load("attendencelog.php", logDetails);
+                            });
+                        });
+                    })
+                }
                 if (selectSub != -1) {
                     $("#logDiv").load("attendencelog.php", details, function() {
                         $("#logDiv").show();
                         var fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
                         $("#logDiv").append(fullLogButton);
                         $("#fullLog").click(function() {
-                            let details = {
-                                selectSem: selectSem,
-                                selectSub: selectSub,
-                                subjectCode: JSON.stringify(subjectCode),
-                                subjectName: JSON.stringify(subjectName),
-                                maxClasses: JSON.stringify(maxClasses),
-                                minimumRequired: JSON.stringify(minimumRequired),
-                                fullLog: 1
-                            }
-                            $("#logDiv").load("attendencelog.php", details)
-
-                        })
-                    });
+                            let logDetails = details;
+                            logDetails["fullLog"] = 1;
+                            $("#logDiv").load("attendencelog.php", logDetails);
+                        });
+                    })
                 }
             })
-            // $("#valueSubmit").click(function() {
-            //     let details = {
-            //         selectSem: selectSem,
-            //         selectSub: selectSub,
-            //         subjectCode: JSON.stringify(subjectCode),
-            //         subjectName: JSON.stringify(subjectName),
-            //         maxClasses: JSON.stringify(maxClasses),
-            //         minimumRequired: JSON.stringify(minimumRequired)
-            //     }
-            //     $("#logDiv").empty();
-            //     $("#tableDiv").load("coursetable.php", details)
-            //     $("#tableDiv").show();
-
-            //     if (selectSub != -1) {
-            //         $("#logDiv").load("attendencelog.php", details);
-            //         $("#logDiv").show();
-            //     }
-            // })
         })
     </script>
 

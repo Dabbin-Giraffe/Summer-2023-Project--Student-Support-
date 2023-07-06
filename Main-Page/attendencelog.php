@@ -15,9 +15,7 @@ $stmt->execute();
 $stmt->bind_result($classesConducted);
 $stmt->fetch();
 
-
 $stmt->close();
-
 
 $date = [];
 $attendence = [];
@@ -32,19 +30,26 @@ $stmt->bind_param("issi", $selectSem, $subjectid, $id, $limit);
 $stmt->execute();
 $stmt->bind_result($date, $attendence);
 
+
+
 $result = [];
-$present = 0;
 while ($stmt->fetch()) {
-    if ($attendence == 1) {
-        $present++;
-    }
+
     $result[] = [
         'date' => $date,
         'attendence' => $attendence
     ];
 }
-
 $stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ? AND attendence = 1");
+$stmt->bind_param("iss", $selectSem, $subjectCode[$selectSem - 1][$selectSub], $id);
+$stmt->execute();
+$stmt->bind_result($present);
+$stmt->fetch();
+$stmt->close();
+
+
 // print_r($result);
 ?>
 
