@@ -1,3 +1,5 @@
+<!-- Deals with attendence log generation -->
+
 <?php
 session_start();
 include_once "connect.php";
@@ -19,18 +21,21 @@ $stmt->close();
 
 $date = [];
 $attendence = [];
+
+// Full log or nah setter
+
 if($fullLog){
     $limit = $classesConducted;
 }else{
     $limit = 3;
 }
 
+//Fetching Dates and attendence(bool)
+
 $stmt = $conn->prepare("SELECT date,attendence FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ? ORDER BY date DESC LIMIT ?");
 $stmt->bind_param("issi", $selectSem, $subjectid, $id, $limit);
 $stmt->execute();
 $stmt->bind_result($date, $attendence);
-
-
 
 $result = [];
 while ($stmt->fetch()) {
@@ -49,8 +54,8 @@ $stmt->bind_result($present);
 $stmt->fetch();
 $stmt->close();
 
+// Table Constructor
 
-// print_r($result);
 ?>
 
 <table>
@@ -72,7 +77,6 @@ $stmt->close();
             echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
             $present--;
         } else {
-            // $present -= 2;
             echo "<td>Absent</td>";
             echo "<td>" . $present . "</td>";
             echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";

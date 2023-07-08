@@ -1,3 +1,7 @@
+<!-- 
+    Webpage generates dropdown boxes dynamically and fetches respective subjects' Attendence
+ -->
+
 <?php
 session_start();
 include "student.php";
@@ -33,9 +37,15 @@ $semesterCount = $student->semesterCount;
         $(document).ready(function() {
             let selectSem;
             let selectSub;
+
+            /*Helps in dynamic generation of Dropdown boxes. The dropdown for semester
+            is created dynamically by php and that data
+            is sent to JS, very weird but thats how i managed to make it work for now*/
+
             $("#semSelect").change(function() {
                 $("#select").hide();
                 selectSem = parseInt($(this).val());
+
                 // Passing arrays from php to js
                 semesterCount = `<?php echo $semesterCount; ?>`;
                 subjectName = JSON.parse('<?php echo $student->jsonEncoder($student->subjectName); ?>')
@@ -46,8 +56,9 @@ $semesterCount = $student->semesterCount;
                 //Deals with generating second drop down to select subjects
 
                 if (selectElementId.find('option').length > 2) {
-                    selectElementId.find('option:not(#all,#selectHide)').remove();
+                    selectElementId.find('option:not(#all,#selectHide)').remove(); //removes everything except the two mentioned, clears and reuses div 
                 }
+                // Dynamic subject dropdown generation by JS
                 for (let i = 0; i < subjectName[selectSem - 1].length; i++) {
                     let option = $('<option>');
                     option.text(subjectName[selectSem - 1][i]);
@@ -56,10 +67,18 @@ $semesterCount = $student->semesterCount;
                 }
                 $("#subSelect").show();
             });
+
+
+
             let selectElementId = $("#subSelect");
             selectElementId.change(function() {
                 $("#selectHide").hide();
                 selectSub = parseInt($(this).val());
+
+                //Loading selected data into respective divs, fullLog is bool tells whether to show full log or nah
+                //This just send the details to coursetable php file
+
+                //coursetable.php : Generates Table for resective subject or all subjects if selectSub = -1
 
                 let details = {
                     selectSem: selectSem,
@@ -74,36 +93,51 @@ $semesterCount = $student->semesterCount;
                 $("#tableDiv").load("coursetable.php", details)
                 $("#tableDiv").show();
 
+                //Deals with generating attendence logs for selected subject while all subject view
+
                 if (selectSub == -1) {
                     $(document).on("click", ".subjectLog", function() {
-                        $("#logDiv").empty();
-                        let subCode = $(this).attr("id");
-                        subLogIndex = subjectCode[selectSem - 1].indexOf(subCode);
+
+                        //Classes : Common classes for all anchor tags, 'subjectLog'
+                        //Id : Fetching Id here, ID for each anchor tag is its respective Subject Code
+
+                        $("#logDiv").empty(); //clearing out everything first
+                        let subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
+                        subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
+
+                        //Preparing To load the attendence details
+
                         let logDetails = details;
                         logDetails["selectSub"] = subLogIndex;
-                        logDetails["fullLog"] = 0;
+                        logDetails["fullLog"] = 0; //setting boolean to zero at first
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
-                            console.log(logDetails);
                             $("#logDiv").show();
+
+                            // Show full Log button
+
                             var fullLogButton = $("<button>").attr("id", "fullLogAll").text("View full Log");
                             $("#logDiv").append(fullLogButton);
+
                             $("#fullLogAll").click(function() {
-                                
                                 logDetails["selectSub"] = subLogIndex;
-                                logDetails["fullLog"] = 1;
+                                logDetails["fullLog"] = 1; //setting boolean to 1
                                 $("#logDiv").load("attendencelog.php", logDetails);
                             });
                         });
                     })
                 }
                 if (selectSub != -1) {
+                    // If selected a specific subjects, shows partial log
                     $("#logDiv").load("attendencelog.php", details, function() {
                         $("#logDiv").show();
+
+                        // Show full log button
+
                         var fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
                         $("#logDiv").append(fullLogButton);
                         $("#fullLog").click(function() {
                             let logDetails = details;
-                            logDetails["fullLog"] = 1;
+                            logDetails["fullLog"] = 1; //setting bool to 1
                             $("#logDiv").load("attendencelog.php", logDetails);
                         });
                     })
@@ -115,6 +149,7 @@ $semesterCount = $student->semesterCount;
 </head>
 
 <body>
+    <!-- Dynamic sem selector -->
     <select name="" id="semSelect">
         <option id="select" value="">Select a semester</option>
         <?php
@@ -123,6 +158,7 @@ $semesterCount = $student->semesterCount;
         }
         ?>
     </select>
+    <!-- All displays are none and later changed using JQuery selectors -->
     <select id='subSelect' style='display: none;width : 150px;'>
         <option id="selectHide" value="">Select a subject</option>
         <option value="-1" id="all">All</option>

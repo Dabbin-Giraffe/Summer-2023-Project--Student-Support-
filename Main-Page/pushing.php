@@ -101,4 +101,5 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 // $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC124',1,'MA1101')";
 // $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC123',1,'CS1201')";
 // $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC123',1,'MA1201')";
+$stmt = "SELECT * FROM user";
 if($conn->query($stmt)){echo "suc";}

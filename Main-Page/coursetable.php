@@ -11,6 +11,9 @@ $maxClasses = json_decode($_POST["maxClasses"]);
 $minimumRequired = json_decode($_POST["minimumRequired"]);
 $id = $_SESSION["id"];
 ?>
+
+<!-- Table Construction -->
+
 <table>
     <tr>
         <th>Subject Code</th>
@@ -33,9 +36,12 @@ $id = $_SESSION["id"];
     ?>
 </table>
 <?php
+
+// Dynamically generates rows for table to display subjects
+
 function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub)
 {
-    $classesconducted = 0;
+    $classesconducted = 0; //needed for attendence calculation and the class number column
     $attendence = 0;
 
     $stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
@@ -63,6 +69,7 @@ function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRe
 
     echo "<tr>";
     echo "<td>" . $subjectCode[$selectSem - 1][$i] . "</td>";
+    //This is related to the "all" selector, adds classes and ids depeding on this "all" thing
     if ($selectSub != -1) {
         echo "<td>" . $subjectName[$selectSem - 1][$i] . "</td>";
     }
