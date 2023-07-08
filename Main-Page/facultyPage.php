@@ -61,9 +61,29 @@ $userDetails = $faculty->getUserdetails();
 
                 $(".subSelect").change(function() {
                     subSelect = $('.subSelect:checked').val();
-                    
-                })
 
+                    $("#uploadMessage").text("You are uploading to " + userDetails["subjectName"][yearSelectIndex][subSelect] + "(" + userDetails["subjectCode"][yearSelectIndex][subSelect] + ")")
+                    $("#uploadFile").show();
+
+                    $("#uploadForm").submit(function(e){
+                        e.preventDefault();
+                        let formData = new FormData(this);
+                        formData.append("id",userDetails["id"]);
+                        formData.append("subIndexSelect",subSelect);
+                        formData.append("yearSelectIndex",yearSelectIndex);
+                        $.ajax({
+                            url : 'upload.php',
+                            type : 'POST',
+                            data : formData,
+                            dataType : 'json',
+                            contentType : false,
+                            processData : false,
+                            success : function(response){
+                                $('#responseMessage').text(response.message);
+                            }
+                        })
+                    })
+                })
             }
         })
     </script>
@@ -83,9 +103,13 @@ $userDetails = $faculty->getUserdetails();
     }
     ?>
     <div id="subSelect" style="display: none;"></div>
-    <div id="uploadFile">
-        <input type="file" name="" id="">
-        
+    <div id="uploadMessage"></div>
+    <div id="uploadFile" style="display: none;">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="fileToUpload" class="attendenceFile" accept=".csv,.xlsx,xls">
+            <input type="submit" value="upload">
+        </form>
     </div>
+    <div id="responseMessage"></div>
 </body>
 </html>
