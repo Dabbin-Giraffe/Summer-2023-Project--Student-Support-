@@ -69,7 +69,6 @@ $semesterCount = $student->semesterCount;
             });
 
 
-
             let selectElementId = $("#subSelect");
             selectElementId.change(function() {
                 $("#selectHide").hide();
@@ -89,8 +88,9 @@ $semesterCount = $student->semesterCount;
                     minimumRequired: JSON.stringify(minimumRequired),
                     fullLog: 0
                 }
-                $("#logDiv").empty();
-                $("#tableDiv").load("coursetable.php", details)
+                // $("#logDiv").empty();
+                $("#logDiv").children().not("#fromDate").remove();
+                $("#tableDiv").load("coursetable.php", details);
                 $("#tableDiv").show();
 
                 //Deals with generating attendence logs for selected subject while all subject view
@@ -98,10 +98,15 @@ $semesterCount = $student->semesterCount;
                 if (selectSub == -1) {
                     $(document).on("click", ".subjectLog", function() {
 
+                        // Dealing with the Date input Here
+
+                        $("#fromDate").show();
+
                         //Classes : Common classes for all anchor tags, 'subjectLog'
                         //Id : Fetching Id here, ID for each anchor tag is its respective Subject Code
 
-                        $("#logDiv").empty(); //clearing out everything first
+                        // $("#logDiv").empty(); //clearing out everything first
+                        $("#logDiv").children().not("#fromDate").remove();
                         let subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
                         subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
 
@@ -113,9 +118,10 @@ $semesterCount = $student->semesterCount;
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
                             $("#logDiv").show();
 
+
                             // Show full Log button
 
-                            var fullLogButton = $("<button>").attr("id", "fullLogAll").text("View full Log");
+                            let fullLogButton = $("<button>").attr("id", "fullLogAll").text("View full Log");
                             $("#logDiv").append(fullLogButton);
 
                             $("#fullLogAll").click(function() {
@@ -131,9 +137,10 @@ $semesterCount = $student->semesterCount;
                     $("#logDiv").load("attendencelog.php", details, function() {
                         $("#logDiv").show();
 
+
                         // Show full log button
 
-                        var fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
+                        let fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
                         $("#logDiv").append(fullLogButton);
                         $("#fullLog").click(function() {
                             let logDetails = details;
@@ -164,10 +171,9 @@ $semesterCount = $student->semesterCount;
         <option value="-1" id="all">All</option>
     </select>
     <br><br>
-    <button id="valueSubmit" style="display: none;">Submit</button>
     <div id="tableDiv" style="display : none;border : 2px solid black"></div>
+    <input style="display:none;margin : 10px;" type="date" name="fromDate" id="fromDate">
     <div id="logDiv" style="display:none;margin : 10px;">
-        <button>hi</button>
     </div>
 
 </body>

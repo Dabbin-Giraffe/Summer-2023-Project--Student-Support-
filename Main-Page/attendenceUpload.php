@@ -4,7 +4,12 @@ include_once "connect.php";
 
 if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $userDetails = $_POST['userDetails'];
+    $subIndexselect = $_POST["subIndexselect"];
+    $yearIndexselect = $_POST["yearIndexselect"];
     $attendenceForm = $_FILES["fileToupload"];
+    $date =  date("Y-m-d");
+    $subjectID = $userDetails["subjectCode"][$yearIndexselect][$subIndexselect];
+    $subjectName = $userDetails["subjectName"][$yearIndexselect][$subIndexselect];
 
     if ($attendenceForm["error"] === UPLOAD_ERR_OK) {
 
@@ -31,13 +36,33 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             }
 
             // Connection stuff
-            // Fetch semester and then push the data
-            $stmt = $conn->prepare("SELECT semester FROM user WHERE subjectCode = ?");
-            $stmt->bind_param("")
+            // Fetch semester
+            $stmt = $conn->prepare("SELECT semester FROM subject WHERE subjectCode = ?");
+            $stmt->bind_param("s", $subjectID);
+            $stmt->execute();
+            $stmt->bind_result($semester);
+            $stmt->fetch();
+            $stmt->close();
+
+            //Pushing attendence data
+            foreach ($studentID as $index => $ID) {
+                $stmt = $conn->prepare("INSERT INTO ATTENDENCE (studentID,date,attendence,subjectID,semester) VALUES (?,?,?,?,?)");
+                $stmt->bind_param("ssisi", $ID, $date, $attendence[$index], $subjectID, $semester);
+                if (!($stmt->execute())) {
+                    $response = [
+                        "success" => false,
+                        "message" => "There was problem with uploading the data",
+                    ];
+                }
+            }
             $response = [
                 "success" => true,
-                "message" => "success",
+                "message" => "successfully uploaded attendence data of " . count($attendence) . " students for" . $subjectName . "(" . $subjectID . ")",
             ];
+
+            $reponse["fullAttendencebutton"] = "<button id = 'fullAttendence'>Show today's attendence</button>";
+            
+
             header('Content-Type: application/json');
             echo json_encode($response);
             exit;

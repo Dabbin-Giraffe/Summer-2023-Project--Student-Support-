@@ -70,7 +70,7 @@ $userDetails = $faculty->getUserdetails();
                     $("#uploadForm").submit(function(e) {
                         e.preventDefault();
                         let formData = new FormData(this);
-                        formData.append("subIndexSelect", subSelect);
+                        formData.append("subIndexselect", subSelect);
                         formData.append("yearIndexselect", yearSelectIndex);
                         formData.append("userDetails", userDetails);
                         $.ajax({
@@ -82,15 +82,22 @@ $userDetails = $faculty->getUserdetails();
                             processData: false,
                             success: function(response) {
                                 if (response.success) {
-                                   
+
                                     $("#responseMessage").text(response.message);
+                                    $("$responseMessage").html(response.fullAttendencebutton);
                                 } else {
                                     $("#responseMessage").text("error php sidee");
                                 }
                             },
                             error: function() {
-                                $("#responseMessage").text("error js side?");
+                                console.log("error js side?");
                             }
+                        })
+                        $("#fullAttendence").click(function() {
+                            let attendenceLog = userDetails;
+                            attendenceLog["selectSubindex"] = selectSubindex;
+                            attendenceLog["selectYearindex"] = selectYearindex;
+                            $("attendenceLog").load("facultyAttendencelog.php",attendenceLog);
                         })
                     })
                 })
@@ -121,6 +128,7 @@ $userDetails = $faculty->getUserdetails();
         </form>
     </div>
     <div id="responseMessage"></div>
+    <div id="attendenceLog"></div>
 </body>
 
 </html>
