@@ -98,26 +98,33 @@ $semesterCount = $student->semesterCount;
                 if (selectSub == -1) {
                     $(document).on("click", ".subjectLog", function() {
 
-                        // Dealing with the Date input Here
-
-                        $("#fromDate").show();
-
                         //Classes : Common classes for all anchor tags, 'subjectLog'
                         //Id : Fetching Id here, ID for each anchor tag is its respective Subject Code
-
+                        
                         // $("#logDiv").empty(); //clearing out everything first
                         $("#logDiv").children().not("#fromDate").remove();
                         let subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
                         subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
-
-                        //Preparing To load the attendence details
-
+                        
+                        // Dealing with the Date input Here
+    
                         let logDetails = details;
                         logDetails["selectSub"] = subLogIndex;
                         logDetails["fullLog"] = 0; //setting boolean to zero at first
+                        logDetails["fromDate"] = null;
+                        logDetails["toDate"] = null;
+                        $(".dateInputlog").show();
+                        $("#fromDate").change(function(){
+                            let fromDate = $(this).val();
+                            logDetails["fromDate"] = fromDate;
+                        })
+                        $("#toDate").change(function(){
+                            let toDate = $(this).val();
+                            logDetails["toDate"] = toDate;
+                        })
+                        //Preparing To load the attendence details
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
                             $("#logDiv").show();
-
 
                             // Show full Log button
 
@@ -172,7 +179,13 @@ $semesterCount = $student->semesterCount;
     </select>
     <br><br>
     <div id="tableDiv" style="display : none;border : 2px solid black"></div>
-    <input style="display:none;margin : 10px;" type="date" name="fromDate" id="fromDate">
+    <div>
+        <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">From - </label>
+        <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="fromDate" id="fromDate">
+        <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">To - </label>
+        <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="toDate" id="toDate">
+
+    </div>
     <div id="logDiv" style="display:none;margin : 10px;">
     </div>
 

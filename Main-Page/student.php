@@ -62,6 +62,9 @@ class Student
             $stmt->close();
         }
     }
+    private function getDatesdetails(){
+        
+    }
     public function jsonEncoder($arr)
     {
         return json_encode($arr);
