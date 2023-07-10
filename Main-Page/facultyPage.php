@@ -65,21 +65,31 @@ $userDetails = $faculty->getUserdetails();
                     $("#uploadMessage").text("You are uploading to " + userDetails["subjectName"][yearSelectIndex][subSelect] + "(" + userDetails["subjectCode"][yearSelectIndex][subSelect] + ")")
                     $("#uploadFile").show();
 
-                    $("#uploadForm").submit(function(e){
+                    //Deals with file AJAX
+
+                    $("#uploadForm").submit(function(e) {
                         e.preventDefault();
                         let formData = new FormData(this);
-                        formData.append("id",userDetails["id"]);
-                        formData.append("subIndexSelect",subSelect);
-                        formData.append("yearSelectIndex",yearSelectIndex);
+                        formData.append("subIndexSelect", subSelect);
+                        formData.append("yearIndexselect", yearSelectIndex);
+                        formData.append("userDetails", userDetails);
                         $.ajax({
-                            url : 'upload.php',
-                            type : 'POST',
-                            data : formData,
-                            dataType : 'json',
-                            contentType : false,
-                            processData : false,
-                            success : function(response){
-                                $('#responseMessage').text(response.message);
+                            url: 'attendenceUpload.php',
+                            type: 'POST',
+                            data: formData,
+                            dataType: 'json',
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                if (response.success) {
+                                   
+                                    $("#responseMessage").text(response.message);
+                                } else {
+                                    $("#responseMessage").text("error php sidee");
+                                }
+                            },
+                            error: function() {
+                                $("#responseMessage").text("error js side?");
                             }
                         })
                     })
@@ -106,10 +116,11 @@ $userDetails = $faculty->getUserdetails();
     <div id="uploadMessage"></div>
     <div id="uploadFile" style="display: none;">
         <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" name="fileToUpload" class="attendenceFile" accept=".csv,.xlsx,xls">
+            <input type="file" name="fileToupload" class="attendenceFile" accept=".csv,.xlsx,xls">
             <input type="submit" value="upload">
         </form>
     </div>
     <div id="responseMessage"></div>
 </body>
+
 </html>
