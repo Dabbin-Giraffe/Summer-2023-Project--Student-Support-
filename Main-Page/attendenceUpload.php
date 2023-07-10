@@ -3,13 +3,18 @@
 include_once "connect.php";
 
 if ($_SERVER["REQUEST_METHOD"] === 'POST') {
-    $userDetails = $_POST['userDetails'];
+    // $userDetails = $_POST['userDetails'];
+
     $subIndexselect = $_POST["subIndexselect"];
     $yearIndexselect = $_POST["yearIndexselect"];
     $attendenceForm = $_FILES["fileToupload"];
     $date =  date("Y-m-d");
-    $subjectID = $userDetails["subjectCode"][$yearIndexselect][$subIndexselect];
-    $subjectName = $userDetails["subjectName"][$yearIndexselect][$subIndexselect];
+
+    // $subjectID = $userDetails["subjectCode"][$yearIndexselect][$subIndexselect];
+    // $subjectName = $userDetails["subjectName"][$yearIndexselect][$subIndexselect];
+
+    $subjectID = $_POST["subjectCode"];
+    $subjectName = $_POST["subjectName"];
 
     if ($attendenceForm["error"] === UPLOAD_ERR_OK) {
 
@@ -46,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
             //Pushing attendence data
             foreach ($studentID as $index => $ID) {
-                $stmt = $conn->prepare("INSERT INTO ATTENDENCE (studentID,date,attendence,subjectID,semester) VALUES (?,?,?,?,?)");
+                $stmt = $conn->prepare("INSERT INTO attendence (studentID,date,attendence,subjectID,semester) VALUES (?,?,?,?,?)");
                 $stmt->bind_param("ssisi", $ID, $date, $attendence[$index], $subjectID, $semester);
                 if (!($stmt->execute())) {
                     $response = [
@@ -59,9 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
                 "success" => true,
                 "message" => "successfully uploaded attendence data of " . count($attendence) . " students for" . $subjectName . "(" . $subjectID . ")",
             ];
-
-            $reponse["fullAttendencebutton"] = "<button id = 'fullAttendence'>Show today's attendence</button>";
-            
 
             header('Content-Type: application/json');
             echo json_encode($response);

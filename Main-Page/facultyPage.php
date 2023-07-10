@@ -72,7 +72,9 @@ $userDetails = $faculty->getUserdetails();
                         let formData = new FormData(this);
                         formData.append("subIndexselect", subSelect);
                         formData.append("yearIndexselect", yearSelectIndex);
-                        formData.append("userDetails", userDetails);
+                        // formData.append("userDetails", userDetails);
+                        formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
+                        formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect])
                         $.ajax({
                             url: 'attendenceUpload.php',
                             type: 'POST',
@@ -82,9 +84,8 @@ $userDetails = $faculty->getUserdetails();
                             processData: false,
                             success: function(response) {
                                 if (response.success) {
-
                                     $("#responseMessage").text(response.message);
-                                    $("$responseMessage").html(response.fullAttendencebutton);
+                                    $("#fullAttendence").show();
                                 } else {
                                     $("#responseMessage").text("error php sidee");
                                 }
@@ -94,10 +95,13 @@ $userDetails = $faculty->getUserdetails();
                             }
                         })
                         $("#fullAttendence").click(function() {
+                            
+                            // console.log("clicked");
+                            $("#attendenceLog").empty();
                             let attendenceLog = userDetails;
-                            attendenceLog["selectSubindex"] = selectSubindex;
-                            attendenceLog["selectYearindex"] = selectYearindex;
-                            $("attendenceLog").load("facultyAttendencelog.php",attendenceLog);
+                            attendenceLog["selectSubindex"] = subSelect;
+                            attendenceLog["selectYearindex"] = yearSelectIndex;
+                            $("#attendenceLog").load("facultyAttendencelog.php", attendenceLog);
                         })
                     })
                 })
@@ -128,6 +132,7 @@ $userDetails = $faculty->getUserdetails();
         </form>
     </div>
     <div id="responseMessage"></div>
+    <div><button id="fullAttendence" style="display: none;margin : 10px;">View attendence Log</button></div>
     <div id="attendenceLog"></div>
 </body>
 

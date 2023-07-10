@@ -2,31 +2,30 @@
 
 include_once "connect.php";
 
-$userDetails = $_POST["attendenceLog"];
 
-$selectYearindex = $userDetails["selectYearindex"];
-$selectSubindex = $userDetails["selectSubindex"];
+$selectYearindex = $_POST["selectYearindex"];
+$selectSubindex = $_POST["selectSubindex"];
 
-$selectSubcode = $userDetails["subjectCode"][$selectYearindex][$selectSubindex];
-$selectSubname = $userDetails["subjectName"][$selectYearindex][$selectSubindex];
+$selectSubcode = $_POST["subjectCode"][$selectYearindex][$selectSubindex];
+$selectSubname = $_POST["subjectName"][$selectYearindex][$selectSubindex];
 $date =  date("Y-m-d");
 $studentID = [];
 $attendence = [];
 $studentName = [];
 
-$stmt = $conn->prepare("SELECT a.studentID,a.attendence,u.firstName,u.lastName FROM attendence a JOIN user u ON a.studenID = u.userID WHERE date = ? AND subjectID = ?");
-$stmt->bind_param("ss", $date, $selectSubcode);
+$stmt = $conn->prepare("SELECT a.studentID,a.attendence,u.firstName,u.lastName FROM attendence a JOIN user u ON a.studentID = u.userID WHERE a.date = ? AND a.subjectID = ?");
+$stmt->bind_param("ss", $date,$selectSubcode);
 $stmt->execute();
 $stmt->bind_result($studentid, $attendencebool, $firstName, $lastName);
 
-while ($stmt->fetch()) {
+while($stmt->fetch()){
     $studentID[] = $studentid;
-    if ($attendencebool == 1) {
+    if($attendencebool == 1){
         $attendence[] = "Present";
-    } else {
+    }else{
         $attendence[] = "Absent";
     }
-    $studentName[] = $firstName . " " . $lastName;
+    $studentName[] = $firstName." ".$lastName;
 }
 
 ?>
@@ -51,4 +50,4 @@ while ($stmt->fetch()) {
     }
     echo $html;
     ?>
-</table>
+</table> 

@@ -114,6 +114,7 @@ $semesterCount = $student->semesterCount;
                         logDetails["fromDate"] = null;
                         logDetails["toDate"] = null;
                         $(".dateInputlog").show();
+                        $("#fromDate").datepicker("option",")
                         $("#fromDate").change(function(){
                             let fromDate = $(this).val();
                             logDetails["fromDate"] = fromDate;
@@ -143,7 +144,6 @@ $semesterCount = $student->semesterCount;
                     // If selected a specific subjects, shows partial log
                     $("#logDiv").load("attendencelog.php", details, function() {
                         $("#logDiv").show();
-
 
                         // Show full log button
 
