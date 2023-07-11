@@ -27,12 +27,16 @@ $semesterCount = $student->semesterCount;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
     <script>
         let semesterCount;
         let subjectName;
         let subjectCode;
         let maxClasses;
         let minimumRequired;
+
+        let startDate;
+        let endDate;
 
         $(document).ready(function() {
             let selectSem;
@@ -86,6 +90,7 @@ $semesterCount = $student->semesterCount;
                     subjectName: JSON.stringify(subjectName),
                     maxClasses: JSON.stringify(maxClasses),
                     minimumRequired: JSON.stringify(minimumRequired),
+                    flag: "<?php echo $student->flag; ?>",
                     fullLog: 0
                 }
                 // $("#logDiv").empty();
@@ -96,33 +101,73 @@ $semesterCount = $student->semesterCount;
                 //Deals with generating attendence logs for selected subject while all subject view
 
                 if (selectSub == -1) {
+
+                    //Deals with subject selection during all subject view
+
                     $(document).on("click", ".subjectLog", function() {
 
                         //Classes : Common classes for all anchor tags, 'subjectLog'
                         //Id : Fetching Id here, ID for each anchor tag is its respective Subject Code
-                        
+
                         // $("#logDiv").empty(); //clearing out everything first
                         $("#logDiv").children().not("#fromDate").remove();
                         let subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
                         subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
-                        
+
                         // Dealing with the Date input Here
-    
+
                         let logDetails = details;
                         logDetails["selectSub"] = subLogIndex;
                         logDetails["fullLog"] = 0; //setting boolean to zero at first
-                        logDetails["fromDate"] = null;
-                        logDetails["toDate"] = null;
+
+                        // $(".dateInputlog").show();
+
+
+                        // Deals with ajax request for restricting dates
+                        let dateDetails = {
+                            "selectSubCode": subjectCode[selectSem - 1][subLogIndex],
+                            "flag": details["flag"]
+                        };
+                        dateDetails = JSON.stringify(dateDetails);
+                        console.log(dateDetails);
+                        $.ajax({
+                            url: 'subjectDates.php',
+                            type: 'POST',
+                            data: dateDetails,
+                            dataType: "json",
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    startDate = response.startDate;
+                                    endDate = response.endDate;
+                                    
+                                } else {
+
+                                    console.log("error php side")
+                                }
+                            },
+                            error: function() {
+                                console.log("error js side?");
+                            }
+                        })
+                        
                         $(".dateInputlog").show();
-                        $("#fromDate").datepicker("option",")
-                        $("#fromDate").change(function(){
-                            let fromDate = $(this).val();
-                            logDetails["fromDate"] = fromDate;
-                        })
-                        $("#toDate").change(function(){
-                            let toDate = $(this).val();
-                            logDetails["toDate"] = toDate;
-                        })
+                        $("#fromDate").prop("min", "2022-11-11");
+                        // $("#fromDate").prop("max", endDate);
+
+                        console.log(startDate);
+                        
+
+
+                        // $("#fromDate").change(function(){
+                        //     let fromDate = $(this).val();
+                        //     logDetails["fromDate"] = fromDate;
+                        // })
+                        // $("#toDate").change(function(){
+                        //     let toDate = $(this).val();
+                        //     logDetails["toDate"] = toDate;
+                        // })
                         //Preparing To load the attendence details
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
                             $("#logDiv").show();

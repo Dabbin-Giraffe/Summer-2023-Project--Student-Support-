@@ -8,21 +8,24 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        
+    </script>
 </head>
 
 <body>
-    <form action="login.php" method="post">
-        <input type="text" name="studId"><br>
-        <input type="submit" value="Submit">
-    </form>
+    <div id="loginDetails">
+        <form action="" id="loginForm" >
+            <label for="email">Email</label>
+            <input name="email" type="email" id="loginEmail">
+            <label for="">Password</label>
+            <input type="password" name="password" id="loginPassword">
+            <input type="submit" value="submit">
+        </form>
+    </div>
 </body>
 
 </html>
 
-<?php
-if (isset($_POST["studId"])) {
-    $_SESSION["id"] = $_POST["studId"];
-    header("Location: index.php");
-}
-?>
