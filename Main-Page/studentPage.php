@@ -26,6 +26,7 @@ $semesterCount = $student->semesterCount;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script>
@@ -112,7 +113,7 @@ $semesterCount = $student->semesterCount;
                         // $("#logDiv").empty(); //clearing out everything first
                         $("#logDiv").children().not("#fromDate").remove();
                         let subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
-                        subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
+                        let subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
 
                         // Dealing with the Date input Here
 
@@ -141,9 +142,11 @@ $semesterCount = $student->semesterCount;
                                 if (response.success) {
                                     startDate = response.startDate;
                                     endDate = response.endDate;
-                                    
-                                } else {
+                                    $(".dateInputlog").show();
 
+                                    startDate = moment(startDate);
+                                    endDate = moment(endDate);
+                                } else {
                                     console.log("error php side")
                                 }
                             },
@@ -151,24 +154,44 @@ $semesterCount = $student->semesterCount;
                                 console.log("error js side?");
                             }
                         })
+
+                        //Taking Date input, if the date selected is older than the date we have it will just take oldest date
+                        // and same in the case of "to" date too, blocking out the dates is giving weird results.
+
+                        let fromDate;
+                        let toDate;
+
+                        $("#fromDate").change(function() {
+                            fromDate = moment($("#fromDate").val());
+                            if (fromDate < startDate) {
+                                fromDate = startDate;
+                            } else if (fromDate > endDate) {
+                                fromDate = endDate;
+                                fromDate.subtract(1, "day");
+                            } else if (fromDate == endDate) {
+                                fromDate.subtract(1, "day");
+                            }
+                            fromDate = fromDate.format("YYYY-MM-DD");
+                        })
+
+
+                        $("#toDate").change(function() {
+                            toDate = moment($("#toDate").val());
+                            if (toDate > endDate) {
+                                toDate = endDate;
+                            } else if (toDate < startDate) {
+                                toDate = startDate;
+                                toDate.add(1, "day");
+                            } else if (toDate == startDate) {
+                                toDate.add(1, "day");
+                            }
+                            toDate = toDate.format("YYYY-MM-DD");
+                        })
+
+                        if(fromDate == toDate){
                         
-                        $(".dateInputlog").show();
-                        $("#fromDate").prop("min", "2022-11-11");
-                        // $("#fromDate").prop("max", endDate);
+                        }
 
-                        console.log(startDate);
-                        
-
-
-                        // $("#fromDate").change(function(){
-                        //     let fromDate = $(this).val();
-                        //     logDetails["fromDate"] = fromDate;
-                        // })
-                        // $("#toDate").change(function(){
-                        //     let toDate = $(this).val();
-                        //     logDetails["toDate"] = toDate;
-                        // })
-                        //Preparing To load the attendence details
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
                             $("#logDiv").show();
 

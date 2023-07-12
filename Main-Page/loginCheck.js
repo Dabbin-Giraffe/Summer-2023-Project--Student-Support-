@@ -5,10 +5,10 @@ function checker() {
     if (email === "" || !isEmail(email)) {
         alert(alerter("email"));
         return false;
-    } else if (password === "") {
+    } else if (password == "") {
         alert("Cant leave password blank");
         return false;
-    } else if (!isPasswordValid(password)) {
+    } else if (isPasswordValid(password)) {
         alert(alerter("password"));
         return false;
     }
@@ -19,13 +19,9 @@ function alerter(name) {
 }
 
 function isEmail(email) {
-    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-        email
-    );
+    return /^[\w.+-]+@mahindrauniversity\.edu\.in$/.test(email);
 }
 // Checks if min 8 chars, has one upper case,one lower case, one special and one number
 function isPasswordValid(password) {
-    var passwordPattern =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordPattern.test(password);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 }

@@ -23,8 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         "success" => true,
         "startDate" => $startDate,
         "endDate" => $endDate
-        // "startDate" => "123",
-        // "endDate" => "ppotato"
+      
     ];
     header('Content-Type: application/json');
     echo json_encode($response);
