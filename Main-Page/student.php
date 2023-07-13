@@ -1,5 +1,4 @@
 <?php
-
 class Student
 {
     public $email;
@@ -17,22 +16,27 @@ class Student
     public $conn;
 
 
+
     function __construct($email, $conn)
     {
         $this->email = $email;
         $this->id = strtoupper(explode("@", $email)[0]);
         $this->conn = $conn;
 
-        $this->getUserdetails();
+        $this->firstName = $_SESSION["firstName"];
+        $this->lastName = $_SESSION["lastName"];
+        $this->flag = $_SESSION["flag"];
+
+        $this->getYeardetails();
         $this->getSemesterdetails();
         $this->getSubjectdetails();
     }
-    public function getUserdetails()
+    public function getYeardetails()
     {
-        $stmt = ($this->conn)->prepare("SELECT u.firstName,u.lastName,u.flag,f.role FROM user u JOIN flag f ON u.flag = f.flag WHERE u.email = ?");
-        $stmt->bind_param("s", $this->email);
+        $stmt = ($this->conn)->prepare("SELECT role FROM flag WHERE flag = ?");
+        $stmt->bind_param("i", $this->flag);
         $stmt->execute();
-        $stmt->bind_result($this->firstName, $this->lastName, $this->flag, $this->year);
+        $stmt->bind_result($this->year);
         $stmt->fetch();
     }
     // Sets number of unique semesters present for specified flag

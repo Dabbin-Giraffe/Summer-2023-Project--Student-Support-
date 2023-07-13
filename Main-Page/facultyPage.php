@@ -117,12 +117,12 @@ $userDetails = $faculty->getUserdetails();
 </head>
 
 <header>
-    <h3>Welcome <?php echo $userDetails["firstName"] . " " . $userDetails["lastName"] ?></h3>
     <div style="display: flex;justify-content : flex-end;">
         <form action="logout.php">
             <button id="logOut" type="submit">Logout</button>
         </form>
     </div>
+    <h3>Welcome <?php echo $userDetails["firstName"] . " " . $userDetails["lastName"] ?></h3>
 </header>
 
 <body>
