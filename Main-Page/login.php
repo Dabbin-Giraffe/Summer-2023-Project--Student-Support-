@@ -11,6 +11,15 @@ if (isset($_SESSION["error"])) {
     $errorMessage = false;
 }
 
+if (isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true)) {
+    if ($_SESSION["isStudent"]) {
+        header("Location:studentPage.php");
+        exit();
+    }
+    header("Location:facultyPage.php");
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

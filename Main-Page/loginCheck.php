@@ -28,11 +28,16 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         $_SESSION["firstName"] = $firstName;
         $_SESSION["lastName"] = $lastName;
         $_SESSION["error"] = 0;
+        $_SESSION["login"] = true;
+        $expiryTime = time() + (60*60*24);
+        setcookie("login","true",$expiryTime,'/');
         if ($isStudent) {
             $_SESSION["flag"] = $flag;
+            $_SESSION["isStudent"] = true;
             header("Location:studentPage.php");
             exit();
         }else{
+            $_SESSION["isStudent"] = false;
             header("Location:facultypage.php");
             exit();
         }

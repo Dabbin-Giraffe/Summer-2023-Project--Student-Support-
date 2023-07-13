@@ -4,10 +4,16 @@
 
 <?php
 session_start();
+
+
+if (!(isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true))) {
+    header("Location:login.php");
+}
+
+
 include "student.php";
 include_once "connect.php";
-?>
-<?php
+
 $email = $_SESSION["email"] = "se21ucse198@mahindrauniversity.edu.in";
 $student = new Student($email, $conn);
 $_SESSION["id"] = $student->id;
@@ -188,8 +194,8 @@ $semesterCount = $student->semesterCount;
                             toDate = toDate.format("YYYY-MM-DD");
                         })
 
-                        if(fromDate == toDate){
-                        
+                        if (fromDate == toDate) {
+
                         }
 
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
@@ -229,6 +235,14 @@ $semesterCount = $student->semesterCount;
     </script>
 
 </head>
+
+<header>
+    <div style="display: flex;justify-content : flex-end;">
+        <form action="logout.php">
+            <button id="logOut" type="submit">Logout</button>
+        </form>
+    </div>
+</header>
 
 <body>
     <!-- Dynamic sem selector -->
