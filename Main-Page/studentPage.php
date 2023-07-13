@@ -4,10 +4,16 @@
 
 <?php
 session_start();
+
+
+if (!(isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true))) {
+    header("Location:login.php");
+}
+
+
 include "student.php";
 include_once "connect.php";
-?>
-<?php
+
 $email = $_SESSION["email"] = "se21ucse198@mahindrauniversity.edu.in";
 $student = new Student($email, $conn);
 $_SESSION["id"] = $student->id;
@@ -26,13 +32,18 @@ $semesterCount = $student->semesterCount;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
     <script>
         let semesterCount;
         let subjectName;
         let subjectCode;
         let maxClasses;
         let minimumRequired;
+
+        let startDate;
+        let endDate;
 
         $(document).ready(function() {
             let selectSem;
@@ -69,7 +80,6 @@ $semesterCount = $student->semesterCount;
             });
 
 
-
             let selectElementId = $("#subSelect");
             selectElementId.change(function() {
                 $("#selectHide").hide();
@@ -87,35 +97,113 @@ $semesterCount = $student->semesterCount;
                     subjectName: JSON.stringify(subjectName),
                     maxClasses: JSON.stringify(maxClasses),
                     minimumRequired: JSON.stringify(minimumRequired),
+                    flag: "<?php echo $student->flag; ?>",
                     fullLog: 0
                 }
-                $("#logDiv").empty();
-                $("#tableDiv").load("coursetable.php", details)
+                // $("#logDiv").empty();
+                $("#logDiv").children().not("#fromDate").remove();
+                $("#tableDiv").load("coursetable.php", details);
                 $("#tableDiv").show();
 
                 //Deals with generating attendence logs for selected subject while all subject view
 
                 if (selectSub == -1) {
+
+                    //Deals with subject selection during all subject view
+
                     $(document).on("click", ".subjectLog", function() {
 
                         //Classes : Common classes for all anchor tags, 'subjectLog'
                         //Id : Fetching Id here, ID for each anchor tag is its respective Subject Code
 
-                        $("#logDiv").empty(); //clearing out everything first
+                        // $("#logDiv").empty(); //clearing out everything first
+                        $("#logDiv").children().not("#fromDate").remove();
                         let subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
-                        subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
+                        let subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
 
-                        //Preparing To load the attendence details
+                        // Dealing with the Date input Here
 
                         let logDetails = details;
                         logDetails["selectSub"] = subLogIndex;
                         logDetails["fullLog"] = 0; //setting boolean to zero at first
+
+                        // $(".dateInputlog").show();
+
+
+                        // Deals with ajax request for restricting dates
+                        let dateDetails = {
+                            "selectSubCode": subjectCode[selectSem - 1][subLogIndex],
+                            "flag": details["flag"]
+                        };
+                        dateDetails = JSON.stringify(dateDetails);
+                        console.log(dateDetails);
+                        $.ajax({
+                            url: 'subjectDates.php',
+                            type: 'POST',
+                            data: dateDetails,
+                            dataType: "json",
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    startDate = response.startDate;
+                                    endDate = response.endDate;
+                                    $(".dateInputlog").show();
+
+                                    startDate = moment(startDate);
+                                    endDate = moment(endDate);
+                                } else {
+                                    console.log("error php side")
+                                }
+                            },
+                            error: function() {
+                                console.log("error js side?");
+                            }
+                        })
+
+                        //Taking Date input, if the date selected is older than the date we have it will just take oldest date
+                        // and same in the case of "to" date too, blocking out the dates is giving weird results.
+
+                        let fromDate;
+                        let toDate;
+
+                        $("#fromDate").change(function() {
+                            fromDate = moment($("#fromDate").val());
+                            if (fromDate < startDate) {
+                                fromDate = startDate;
+                            } else if (fromDate > endDate) {
+                                fromDate = endDate;
+                                fromDate.subtract(1, "day");
+                            } else if (fromDate == endDate) {
+                                fromDate.subtract(1, "day");
+                            }
+                            fromDate = fromDate.format("YYYY-MM-DD");
+                        })
+
+
+                        $("#toDate").change(function() {
+                            toDate = moment($("#toDate").val());
+                            if (toDate > endDate) {
+                                toDate = endDate;
+                            } else if (toDate < startDate) {
+                                toDate = startDate;
+                                toDate.add(1, "day");
+                            } else if (toDate == startDate) {
+                                toDate.add(1, "day");
+                            }
+                            toDate = toDate.format("YYYY-MM-DD");
+                        })
+
+                        if (fromDate == toDate) {
+
+                        }
+
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
                             $("#logDiv").show();
 
                             // Show full Log button
 
-                            var fullLogButton = $("<button>").attr("id", "fullLogAll").text("View full Log");
+                            let fullLogButton = $("<button>").attr("id", "fullLogAll").text("View full Log");
                             $("#logDiv").append(fullLogButton);
 
                             $("#fullLogAll").click(function() {
@@ -133,7 +221,7 @@ $semesterCount = $student->semesterCount;
 
                         // Show full log button
 
-                        var fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
+                        let fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
                         $("#logDiv").append(fullLogButton);
                         $("#fullLog").click(function() {
                             let logDetails = details;
@@ -147,6 +235,14 @@ $semesterCount = $student->semesterCount;
     </script>
 
 </head>
+
+<header>
+    <div style="display: flex;justify-content : flex-end;">
+        <form action="logout.php">
+            <button id="logOut" type="submit">Logout</button>
+        </form>
+    </div>
+</header>
 
 <body>
     <!-- Dynamic sem selector -->
@@ -164,10 +260,15 @@ $semesterCount = $student->semesterCount;
         <option value="-1" id="all">All</option>
     </select>
     <br><br>
-    <button id="valueSubmit" style="display: none;">Submit</button>
     <div id="tableDiv" style="display : none;border : 2px solid black"></div>
+    <div>
+        <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">From - </label>
+        <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="fromDate" id="fromDate">
+        <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">To - </label>
+        <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="toDate" id="toDate">
+
+    </div>
     <div id="logDiv" style="display:none;margin : 10px;">
-        <button>hi</button>
     </div>
 
 </body>

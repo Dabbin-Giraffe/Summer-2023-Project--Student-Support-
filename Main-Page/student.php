@@ -62,6 +62,7 @@ class Student
             $stmt->close();
         }
     }
+
     public function jsonEncoder($arr)
     {
         return json_encode($arr);

@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if (!(isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true))) {
+    header("Location:login.php");
+}
+
 
 include "faculty.php";
 include "connect.php";
@@ -70,9 +76,11 @@ $userDetails = $faculty->getUserdetails();
                     $("#uploadForm").submit(function(e) {
                         e.preventDefault();
                         let formData = new FormData(this);
-                        formData.append("subIndexSelect", subSelect);
+                        formData.append("subIndexselect", subSelect);
                         formData.append("yearIndexselect", yearSelectIndex);
-                        formData.append("userDetails", userDetails);
+                        // formData.append("userDetails", userDetails);
+                        formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
+                        formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect])
                         $.ajax({
                             url: 'attendenceUpload.php',
                             type: 'POST',
@@ -82,15 +90,24 @@ $userDetails = $faculty->getUserdetails();
                             processData: false,
                             success: function(response) {
                                 if (response.success) {
-                                   
                                     $("#responseMessage").text(response.message);
+                                    $("#fullAttendence").show();
                                 } else {
                                     $("#responseMessage").text("error php sidee");
                                 }
                             },
                             error: function() {
-                                $("#responseMessage").text("error js side?");
+                                console.log("error js side?");
                             }
+                        })
+                        $("#fullAttendence").click(function() {
+
+                            // console.log("clicked");
+                            $("#attendenceLog").empty();
+                            let attendenceLog = userDetails;
+                            attendenceLog["selectSubindex"] = subSelect;
+                            attendenceLog["selectYearindex"] = yearSelectIndex;
+                            $("#attendenceLog").load("facultyAttendencelog.php", attendenceLog);
                         })
                     })
                 })
@@ -99,8 +116,16 @@ $userDetails = $faculty->getUserdetails();
     </script>
 </head>
 
-<body>
+<header>
     <h3>Welcome <?php echo $userDetails["firstName"] . " " . $userDetails["lastName"] ?></h3>
+    <div style="display: flex;justify-content : flex-end;">
+        <form action="logout.php">
+            <button id="logOut" type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<body>
     <?php
     if (count($userDetails["years"]) > 1) {
         for ($i = 0; $i < count($userDetails["years"]); $i++) {
@@ -121,6 +146,8 @@ $userDetails = $faculty->getUserdetails();
         </form>
     </div>
     <div id="responseMessage"></div>
+    <div><button id="fullAttendence" style="display: none;margin : 10px;">View attendence Log</button></div>
+    <div id="attendenceLog"></div>
 </body>
 
 </html>

@@ -9,6 +9,8 @@ $subjectCode = json_decode($_POST["subjectCode"]);
 $id = $_SESSION["id"];
 $subjectid = $subjectCode[$selectSem - 1][$selectSub];
 $fullLog = $_POST["fullLog"];
+// $fromDate  =  $_POST["fromDate"];
+// $toDate = $_POST["toDate"];
 
 
 $stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");

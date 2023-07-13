@@ -1,6 +1,6 @@
 <?php
 
-include_once "D:\Summer Project - Student Support\Main-Page\connect.php";
+include_once "connect.php";
 
 // $stmt = $conn->prepare("INSERT INTO attendencedata (subject,semester) VALUES (?,?)");
 // $stmt->bind_param("si",$subject,$semester);
@@ -101,5 +101,10 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 // $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC124',1,'MA1101')";
 // $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC123',1,'CS1201')";
 // $stmt = "INSERT INTO faculty (userID,flag,subjectCode) VALUES ('FC123',1,'MA1201')";
-$stmt = "SELECT * FROM user";
-if($conn->query($stmt)){echo "suc";}
+// $stmt = "SELECT * FROM user";
+// if($conn->query($stmt)){echo "suc";}
+
+// $stmt = "UPDATE attendence SET flag = 1";
+// if($conn->query($stmt)){
+//     echo "suc";
+// }
