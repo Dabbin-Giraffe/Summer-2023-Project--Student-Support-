@@ -2,7 +2,9 @@
 
 <?php
 session_start();
-include_once "connect.php";
+include_once "../../connect.php";
+
+
 $selectSem = $_POST["selectSem"];
 $selectSub = $_POST["selectSub"];
 $subjectCode = json_decode($_POST["subjectCode"]);
@@ -26,9 +28,9 @@ $attendence = [];
 
 // Full log or nah setter
 
-if($fullLog){
+if ($fullLog) {
     $limit = $classesConducted;
-}else{
+} else {
     $limit = 3;
 }
 

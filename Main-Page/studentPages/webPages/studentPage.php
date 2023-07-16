@@ -7,12 +7,11 @@ session_start();
 
 
 if (!(isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true))) {
-    header("Location:login.php");
+    header("Location:../../loginPages/login.php");
 }
 
-
-include "student.php";
-include_once "connect.php";
+include "../utilityFiles/student.php";
+include_once "../../connect.php";
 
 $email = $_SESSION["email"] = "se21ucse198@mahindrauniversity.edu.in";
 $student = new Student($email, $conn);
@@ -103,7 +102,7 @@ $semesterCount = $student->semesterCount;
                 }
                 // $("#logDiv").empty();
                 $("#logDiv").children().not("#fromDate").remove();
-                $("#tableDiv").load("coursetable.php", details);
+                $("#tableDiv").load("../utilityFiles/coursetable.php", details);
                 $("#tableDiv").show();
 
                 //Deals with generating attendence logs for selected subject while all subject view
@@ -139,7 +138,7 @@ $semesterCount = $student->semesterCount;
                         dateDetails = JSON.stringify(dateDetails);
                         console.log(dateDetails);
                         $.ajax({
-                            url: 'subjectDates.php',
+                            url: '../utilityFiles/subjectDates.php',
                             type: 'POST',
                             data: dateDetails,
                             dataType: "json",
@@ -208,7 +207,7 @@ $semesterCount = $student->semesterCount;
                         //     console.log(fromDate);
                         // })
 
-                        $("#logDiv").load("attendencelog.php", logDetails, function() {
+                        $("#logDiv").load("../utilityFiles/attendencelog.php", logDetails, function() {
                             $("#logDiv").show();
 
                             // Show full Log button
@@ -219,14 +218,14 @@ $semesterCount = $student->semesterCount;
                             $("#fullLogAll").click(function() {
                                 logDetails["selectSub"] = subLogIndex;
                                 logDetails["fullLog"] = 1; //setting boolean to 1
-                                $("#logDiv").load("attendencelog.php", logDetails);
+                                $("#logDiv").load("../utilityFiles/attendencelog.php", logDetails);
                             });
                         });
                     })
                 }
                 if (selectSub != -1) {
                     // If selected a specific subjects, shows partial log
-                    $("#logDiv").load("attendencelog.php", details, function() {
+                    $("#logDiv").load("../utilityFiles/attendencelog.php", details, function() {
                         $("#logDiv").show();
 
                         // Show full log button
@@ -236,7 +235,7 @@ $semesterCount = $student->semesterCount;
                         $("#fullLog").click(function() {
                             let logDetails = details;
                             logDetails["fullLog"] = 1; //setting bool to 1
-                            $("#logDiv").load("attendencelog.php", logDetails);
+                            $("#logDiv").load("../utilityFiles/attendencelog.php", logDetails);
                         });
                     })
                 }

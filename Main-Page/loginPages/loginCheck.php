@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once "connect.php";
+include_once "../connect.php";
 
 function validate($data)
 {
@@ -34,11 +34,11 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         if ($isStudent) {
             $_SESSION["flag"] = $flag;
             $_SESSION["isStudent"] = true;
-            header("Location:studentPage.php");
+            header("Location:../studentPages/webPages/studentPage.php");
             exit();
         } else {
             $_SESSION["isStudent"] = false;
-            header("Location:facultypage.php");
+            header("Location:../facultyPages/webPages/facultyUploadPage.php");
             exit();
         }
     }

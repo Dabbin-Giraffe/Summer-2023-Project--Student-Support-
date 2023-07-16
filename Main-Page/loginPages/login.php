@@ -13,10 +13,10 @@ if (isset($_SESSION["error"])) {
 
 if (isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true)) {
     if ($_SESSION["isStudent"]) {
-        header("Location:studentPage.php");
+        header("Location:../studentPages/webPages/studentPage.php");
         exit();
     }
-    header("Location:facultyPage.php");
+    header("Location:../facultyPages/webPages/facultyUploadPage.php");
     exit();
 }
 
