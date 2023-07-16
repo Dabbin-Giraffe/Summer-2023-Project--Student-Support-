@@ -34,6 +34,7 @@ $semesterCount = $student->semesterCount;
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <script>
         let semesterCount;
@@ -150,8 +151,8 @@ $semesterCount = $student->semesterCount;
                                     endDate = response.endDate;
                                     $(".dateInputlog").show();
 
-                                    startDate = moment(startDate);
-                                    endDate = moment(endDate);
+                                    startDate = moment(startDate, "YYYY-MM-DD");
+                                    endDate = moment(endDate, "YYYY-MM-DD");
                                 } else {
                                     console.log("error php side")
                                 }
@@ -164,39 +165,48 @@ $semesterCount = $student->semesterCount;
                         //Taking Date input, if the date selected is older than the date we have it will just take oldest date
                         // and same in the case of "to" date too, blocking out the dates is giving weird results.
 
-                        let fromDate;
-                        let toDate;
+                        // let fromDate = null;
+                        // let toDate = null;
 
-                        $("#fromDate").change(function() {
-                            fromDate = moment($("#fromDate").val());
-                            if (fromDate < startDate) {
-                                fromDate = startDate;
-                            } else if (fromDate > endDate) {
-                                fromDate = endDate;
-                                fromDate.subtract(1, "day");
-                            } else if (fromDate == endDate) {
-                                fromDate.subtract(1, "day");
-                            }
-                            fromDate = fromDate.format("YYYY-MM-DD");
-                        })
+                        // $("#dateSubmit").click(function() {
 
+                        //     //From date
 
-                        $("#toDate").change(function() {
-                            toDate = moment($("#toDate").val());
-                            if (toDate > endDate) {
-                                toDate = endDate;
-                            } else if (toDate < startDate) {
-                                toDate = startDate;
-                                toDate.add(1, "day");
-                            } else if (toDate == startDate) {
-                                toDate.add(1, "day");
-                            }
-                            toDate = toDate.format("YYYY-MM-DD");
-                        })
+                        //     fromDate = moment($("#fromDate").val());
+                        //     if (fromDate.isBefore(startDate)) {
+                        //         fromDate = startDate.clone();
+                        //     } else if (fromDate.isAfter(endDate)) {
+                        //         fromDate = endDate.clone();
+                        //         fromDate = moment().subtract(1, "days");
+                        //     } else if (fromDate.isSame(endDate)) {
+                        //         fromDate = moment().subtract(1, "days");
+                        //     }
+                        //     // fromDate = fromDate.format("YYYY-MM-DD");
 
-                        if (fromDate == toDate) {
+                        //     //To date
 
-                        }
+                        //     toDate = moment($("#toDate").val());
+                        //     if (toDate.isAfter(endDate)) {
+                        //         toDate = endDate.clone();
+                        //     } else if (toDate.isBefore(startDate)) {
+                        //         toDate = startDate.clone();
+                        //         toDate = moment().add(1, "days");
+                        //     } else if (toDate.isSame(startDate)) {
+                        //         toDate = moment().add(1, "days");
+                        //     }
+                        //     // toDate = toDate.format("YYYY-MM-DD");
+
+                        //     if (fromDate.isAfter(toDate)) {
+                        //         let tempDate = toDate;
+                        //         toDate = fromDate;
+                        //         fromDate = tempDate;
+                        //     }
+
+                        //     //logic
+
+                        //     console.log(toDate)
+                        //     console.log(fromDate);
+                        // })
 
                         $("#logDiv").load("attendencelog.php", logDetails, function() {
                             $("#logDiv").show();
@@ -237,10 +247,12 @@ $semesterCount = $student->semesterCount;
 </head>
 
 <header>
-    <div style="display: flex;justify-content : flex-end;">
-        <form action="logout.php">
-            <button id="logOut" type="submit">Logout</button>
-        </form>
+    <div>
+        <div style="display: flex;justify-content : flex-end;">
+            <form action="logout.php">
+                <button id="logOut" type="submit">Logout</button>
+            </form>
+        </div>
     </div>
 </header>
 
@@ -266,7 +278,7 @@ $semesterCount = $student->semesterCount;
         <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="fromDate" id="fromDate">
         <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">To - </label>
         <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="toDate" id="toDate">
-
+        <button type="submit" style="display : none;margin:10px;" class="dateInputlog" id="dateSubmit">Submit</button>
     </div>
     <div id="logDiv" style="display:none;margin : 10px;">
     </div>

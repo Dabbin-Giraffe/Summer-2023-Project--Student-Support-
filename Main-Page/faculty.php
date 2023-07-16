@@ -1,9 +1,7 @@
 <?php
-
 class Faculty
 {
     public $email;
-    private $password;
     public $id;
     public $conn;
     public $firstName;
@@ -19,15 +17,11 @@ class Faculty
     function __construct($email, $conn)
     {
         $this->email = $email;
-        $this->id = strtoupper(explode("@", $email)[0]);
         $this->conn = $conn;
 
-        $stmt = ($this->conn)->prepare("SELECT u.firstName,u.lastName FROM user u WHERE u.email = ? AND u.isStudent = 0");
-        $stmt->bind_param("s", $this->email);
-        $stmt->execute();
-        $stmt->bind_result($this->firstName, $this->lastName);
-        $stmt->fetch();
-        $stmt->close();
+        $this->firstName = $_SESSION["firstName"];
+        $this->lastName = $_SESSION["lastName"];
+        $this->id = $_SESSION["id"];
 
         $this->getRoledetails();
         $this->getSubjectdetails();

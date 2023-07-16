@@ -114,15 +114,46 @@ $userDetails = $faculty->getUserdetails();
             }
         })
     </script>
+    <style>
+        ul.navbar {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        ul.navbar li {
+            float: left;
+        }
+
+        ul.navbar li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        ul.navbar li a:hover {
+            background-color: #111;
+        }
+
+        ul.navbar li:last-child {
+            float: right;
+        }
+    </style>
 </head>
 
 <header>
+    <nav>
+        <ul class="navbar">
+            <li><a href="upload.php">Upload</a></li>
+            <li><a href="fetch.php">Fetch</a></li>
+            <li><a href="logout.php">Logout</a></li>
+        </ul>
+    </nav>
     <h3>Welcome <?php echo $userDetails["firstName"] . " " . $userDetails["lastName"] ?></h3>
-    <div style="display: flex;justify-content : flex-end;">
-        <form action="logout.php">
-            <button id="logOut" type="submit">Logout</button>
-        </form>
-    </div>
 </header>
 
 <body>
