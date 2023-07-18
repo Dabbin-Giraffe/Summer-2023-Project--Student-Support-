@@ -248,7 +248,7 @@ $semesterCount = $student->semesterCount;
 <header>
     <div>
         <div style="display: flex;justify-content : flex-end;">
-            <form action="logout.php">
+            <form action="../../loginPages/logout.php">
                 <button id="logOut" type="submit">Logout</button>
             </form>
         </div>
