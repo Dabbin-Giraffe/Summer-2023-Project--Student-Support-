@@ -58,11 +58,20 @@ $(document).ready(function () {
 
         $("#studentSearchButton").click(function () {
             studentID = $("#studentSearch").val();
+            $("#alerterID").remove();
+
+            // Deals with adding the alerter
+
             if (studentID == "" || isStudentID(studentID)) {
-                let htmlAlert = '<small id="alerter" style="display : none;"></small>'
-                $("#search").append()
+                $("#alerterID").remove();
+                let htmlAlert = $("<small>").text("Invalid student ID");
+                htmlAlert.attr("id", "alerterID")
+                $("#search").append(htmlAlert);
+                return;
             }
 
+            //Deals with AJAX transfer of the student details and the year
+            
         })
     })
 
