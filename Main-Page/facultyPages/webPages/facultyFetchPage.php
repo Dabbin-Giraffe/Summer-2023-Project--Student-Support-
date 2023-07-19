@@ -25,7 +25,6 @@ $userDetails = $faculty->getUserdetails();
     <link rel="stylesheet" href="facultyFetchStyle.css">
     <title>Document</title>
 </head>
-
 <header>
     <nav>
         <ul class="navbar">
@@ -54,6 +53,7 @@ $userDetails = $faculty->getUserdetails();
         <input type="text" name="studentSearch" id="studentSearch">
         <button id="studentSearchButton">Search</button>
     </div>
+    <div id="attendenceFetchtable"></div>
 </body>
 
-</html>
+</html

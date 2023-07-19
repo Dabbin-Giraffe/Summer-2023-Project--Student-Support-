@@ -3,7 +3,7 @@
 <?php
 session_start();
 include_once "../../connect.php";
-
+include "../../utilityFiles/attendenceLogfunction.php";
 
 $selectSem = $_POST["selectSem"];
 $selectSub = $_POST["selectSub"];
@@ -15,80 +15,4 @@ $fullLog = $_POST["fullLog"];
 // $toDate = $_POST["toDate"];
 
 
-$stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ?");
-$stmt->bind_param("iss", $selectSem, $subjectCode[$selectSem - 1][$selectSub], $id);
-$stmt->execute();
-$stmt->bind_result($classesConducted);
-$stmt->fetch();
-
-$stmt->close();
-
-$date = [];
-$attendence = [];
-
-// Full log or nah setter
-
-if ($fullLog) {
-    $limit = $classesConducted;
-} else {
-    $limit = 3;
-}
-
-//Fetching Dates and attendence(bool)
-
-$stmt = $conn->prepare("SELECT date,attendence FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ? ORDER BY date DESC LIMIT ?");
-$stmt->bind_param("issi", $selectSem, $subjectid, $id, $limit);
-$stmt->execute();
-$stmt->bind_result($date, $attendence);
-
-$result = [];
-while ($stmt->fetch()) {
-
-    $result[] = [
-        'date' => $date,
-        'attendence' => $attendence
-    ];
-}
-$stmt->close();
-
-$stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE semester = ? AND subjectID = ? AND studentID = ? AND attendence = 1");
-$stmt->bind_param("iss", $selectSem, $subjectCode[$selectSem - 1][$selectSub], $id);
-$stmt->execute();
-$stmt->bind_result($present);
-$stmt->fetch();
-$stmt->close();
-
-// Table Constructor
-
-?>
-
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Attendence Status</th>
-        <th>Attendended Classes</th>
-        <th>Attendence Percent</th>
-        <th>Class Number</th>
-    </tr>
-
-    <?php
-    foreach ($result as $value) {
-        echo "<tr>";
-        echo "<td>" . $value["date"] . "</td>";
-        if ($value["attendence"] == 1) {
-            echo "<td>present</td>";
-            echo "<td>" . $present . "</td>";
-            echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
-            $present--;
-        } else {
-            echo "<td>Absent</td>";
-            echo "<td>" . $present . "</td>";
-            echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
-        }
-        // echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
-        echo "<td>" . $classesConducted-- . "</td>";
-    }
-    ?>
-
-
-</table>
+echo attendenceLog($id,$subjectid,$fullLog,$conn);

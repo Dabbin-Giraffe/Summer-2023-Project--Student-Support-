@@ -3,12 +3,18 @@ function isStudentID(studentID) {
     return pattern.test(studentID);
 }
 
+function cleanStudentID(studentID) {
+    studentID = studentID.trim().toUpperCase();
+    return studentID;
+}
+
 $(document).ready(function () {
 
     //User Details var has all the faculty subject years etc
 
     let studentID;
     let subSelect;
+    let attendenceTable;
 
     // Year selection part
 
@@ -58,6 +64,7 @@ $(document).ready(function () {
 
         $("#studentSearchButton").click(function () {
             studentID = $("#studentSearch").val();
+            studentID = cleanStudentID(studentID);
             $("#alerterID").remove();
 
             // Deals with adding the alerter
@@ -71,8 +78,36 @@ $(document).ready(function () {
             }
 
             //Deals with AJAX transfer of the student details and the year
-            
-            
+
+            let Details = {
+                "studentID": studentID,
+                "yearSelectIndex": yearSelectIndex,
+                "subSelect": subSelect,
+                "subCode": userDetails["subjectCode"][yearSelectIndex][subSelect],
+                "year": userDetails["years"][yearSelectIndex]
+            }
+
+            Details = JSON.stringify(Details);
+
+            $.ajax({
+                url: "../utilityFiles/studentAttendencefetch.php",
+                type: "POST",
+                data: Details,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        attendenceTable = response.table;
+                        $("#attendenceFetchtable").html(attendenceTable);
+                    } else {
+                        console.log("brhe");
+                    }
+                },
+                error: function () {
+                    console.log("error js side");
+                }
+            })
 
         })
     })
