@@ -72,6 +72,8 @@ $(document).ready(function () {
 
             //Deals with AJAX transfer of the student details and the year
             
+            
+
         })
     })
 

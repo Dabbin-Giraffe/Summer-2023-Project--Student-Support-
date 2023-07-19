@@ -29,7 +29,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         $_SESSION["lastName"] = $lastName;
         $_SESSION["error"] = 0;
         $_SESSION["login"] = true;
-        $_SESSION["email"] = $emai;
+        $_SESSION["email"] = $email;
         $expiryTime = time() + (60 * 60 * 24);
         setcookie("login", "true", $expiryTime, '/');
         if ($isStudent) {
