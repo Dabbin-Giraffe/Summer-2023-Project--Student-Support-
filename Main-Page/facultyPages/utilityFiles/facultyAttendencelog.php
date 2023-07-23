@@ -1,6 +1,6 @@
 <?php
 
-include_once "connect.php";
+include_once "../../connect.php";
 
 $selectYearindex = $_POST["selectYearindex"];
 $selectSubindex = $_POST["selectSubindex"];
