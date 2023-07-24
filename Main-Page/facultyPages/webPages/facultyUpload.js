@@ -42,45 +42,49 @@ $(document).ready(function () {
 
             $("#uploadMessage").text("You are uploading to " + userDetails["subjectName"][yearSelectIndex][subSelect] + "(" + userDetails["subjectCode"][yearSelectIndex][subSelect] + ")")
             $("#uploadFile").show();
+            $("#uploadForm")[0].reset();
+            $("#attendenceLog").empty();
+            $("#submitButton").prop("disabled", false);
 
-            //Deals with file AJAX
-
-            $("#uploadForm").submit(function (e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                formData.append("subIndexselect", subSelect);
-                formData.append("yearIndexselect", yearSelectIndex);
-                // formData.append("userDetails", userDetails);
-                formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
-                formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect])
-                $.ajax({
-                    url: '../utilityFiles/attendenceUpload.php',
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response.success) {
-                            $("#responseMessage").text(response.message);
-                            $("#fullAttendence").show();
-                        } else {
-                            $("#responseMessage").text("error php sidee");
-                        }
-                    },
-                    error: function () {
-                        console.log("error js side?");
+        })
+        //Deals with file AJAX
+        $("#uploadForm").submit(function (e) {
+            e.preventDefault();
+            $("#submitButton").prop("disabled", true);
+            let formData = new FormData(this);
+            formData.append("subIndexselect", subSelect);
+            formData.append("yearIndexselect", yearSelectIndex);
+            // formData.append("userDetails", userDetails);
+            formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
+            formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect]);
+            formData.append("userID", userDetails["id"]);
+            $.ajax({
+                url: '../utilityFiles/attendenceUpload.php',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        $("#responseMessage").text(response.message);
+                        $("#fullAttendence").show();
+                    } else {
+                        $("#responseMessage").text("error php sidee");
                     }
-                })
-                $("#fullAttendence").click(function () {
+                },
+                error: function () {
+                    console.log("error js side?");
+                }
+            })
+            $("#fullAttendence").click(function () {
 
-                    // console.log("clicked");
-                    $("#attendenceLog").empty();
-                    let attendenceLog = userDetails;
-                    attendenceLog["selectSubindex"] = subSelect;
-                    attendenceLog["selectYearindex"] = yearSelectIndex;
-                    $("#attendenceLog").load("../utilityFiles/facultyAttendencelog.php", attendenceLog);
-                })
+                // console.log("clicked");
+                $("#attendenceLog").empty();
+                let attendenceLog = userDetails;
+                attendenceLog["selectSubindex"] = subSelect;
+                attendenceLog["selectYearindex"] = yearSelectIndex;
+                $("#attendenceLog").load("../utilityFiles/facultyAttendencelog.php", attendenceLog);
             })
         })
     }

@@ -58,8 +58,8 @@ $userDetails = $faculty->getUserdetails();
     <div id="uploadMessage"></div>
     <div id="uploadFile" style="display: none;">
         <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" name="fileToupload" class="attendenceFile" accept=".csv,.xlsx,xls">
-            <input type="submit" value="upload">
+            <input type="file" name="fileToupload" class="attendenceFile" accept=".csv,.xlsx,xls" multiple = "false">
+            <input type="submit" value="upload" id="submitButton">
         </form>
     </div>
     <div id="responseMessage"></div>
