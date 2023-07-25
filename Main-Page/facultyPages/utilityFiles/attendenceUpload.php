@@ -8,12 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $subIndexselect = $_POST["subIndexselect"];
     $yearIndexselect = $_POST["yearIndexselect"];
     $attendenceForm = $_FILES["fileToupload"];
-    $date =  "2022-10-14";
-
+    $date =  $_POST["date"];
     $subjectID = $_POST["subjectCode"];
     $subjectName = $_POST["subjectName"];
-    // $userID = $_POST["userID"];
-    $flag = 1;
+    $userID = $_POST["userID"];
 
     if ($attendenceForm["error"] === UPLOAD_ERR_OK) {
 
@@ -35,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
                     // } else {
                     //     $attendence[] = 0;
                     // }
-                    $attendence[] = random_int(0,1);
+                    $attendence[] = random_int(0, 1);
                 }
                 fclose($handle);
             }
@@ -49,17 +47,17 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             $stmt->fetch();
             $stmt->close();
 
-            // $stmt = $conn->prepare("SELECT flag FROM faculty WHERE userID = ? and subjectCode = ?");
-            // $stmt->bind_param("ss",$userID,$subjectID);
-            // $stmt->execute();
-            // $stmt->bind_result($flag);
-            // $stmt->fetch();
-            // $stmt->close();
+            $stmt = $conn->prepare("SELECT flag FROM faculty WHERE userID = ? and subjectCode = ?");
+            $stmt->bind_param("ss", $userID, $subjectID);
+            $stmt->execute();
+            $stmt->bind_result($flag);
+            $stmt->fetch();
+            $stmt->close();
 
             //Pushing attendence data
             foreach ($studentID as $index => $ID) {
                 $stmt = $conn->prepare("INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES (?,?,?,?,?,?)");
-                $stmt->bind_param("ssisii", $ID, $date, $attendence[$index], $subjectID, $semester,$flag);
+                $stmt->bind_param("ssisii", $ID, $date, $attendence[$index], $subjectID, $semester, $flag);
                 if (!($stmt->execute())) {
                     $response = [
                         "success" => false,
@@ -69,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             }
             $response = [
                 "success" => true,
-                "message" => "[".$date."] : successfully uploaded attendence data of " . count($attendence) . " students for" . $subjectName . "(" . $subjectID . ")",
+                "message" => "[" . $date . "] : successfully uploaded attendence data of " . count($attendence) . " students for" . $subjectName . "(" . $subjectID . ")",
             ];
 
             header('Content-Type: application/json');

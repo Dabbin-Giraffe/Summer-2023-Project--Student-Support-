@@ -1,12 +1,12 @@
 <?php
 
-function attendenceLog($id, $subjectid, $fullLog, $conn)
+function attendenceLog($id, $subjectid, $fullLog, $conn, $fromDate = "2000-01-01", $toDate = "2100-01-01")
 {
     $present = 0;
     $attendence = 0;
     $date = 0;
     $classesConducted = 0;
-    
+
     //Fetching Dates and attendence(bool)
 
     $stmt = $conn->prepare("SELECT date,attendence FROM attendence WHERE subjectID = ? AND studentID = ? ORDER BY date DESC");
@@ -26,13 +26,13 @@ function attendenceLog($id, $subjectid, $fullLog, $conn)
         ];
     }
     $stmt->close();
-    
-        if($fullLog){
-            $limit = $classesConducted;
-        }else{
-            $limit = 3;
-        }
-    
+
+    if ($fullLog) {
+        $limit = $classesConducted;
+    } else {
+        $limit = 3;
+    }
+
     $html = "<table>
             <tr>
                 <th>Date</th>
@@ -43,23 +43,30 @@ function attendenceLog($id, $subjectid, $fullLog, $conn)
             </tr>";
 
     foreach ($result as $value) {
-        if(!($limit--)){
+        if (!($limit--)) {
             break;
         }
-        $html .= "<tr>";
-        $html .= "<td>" . $value["date"] . "</td>";
-        if ($value["attendence"] == 1) {
-            $html .=  "<td>present</td>";
-            $html .= "<td>" . $present . "</td>";
-            $html .= "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
-            $present--;
-        } else {
-            $html .= "<td>Absent</td>";
-            $html .= "<td>" . $present . "</td>";
-            $html .= "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
+        if ($value["date"] >= $fromDate && $value["date"] <= $toDate) {
+            $html .= "<tr>";
+            $html .= "<td>" . $value["date"] . "</td>";
+            if ($value["attendence"] == 1) {
+                $html .=  "<td>present</td>";
+                $html .= "<td>" . $present . "</td>";
+                $html .= "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
+                $present--;
+            } else {
+                $html .= "<td>Absent</td>";
+                $html .= "<td>" . $present . "</td>";
+                $html .= "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
+            }
+            $html .= "<td>" . $classesConducted . "</td></tr>";
+        }else{
+            if ($value["attendence"] == 1) {
+                $present--;
+            }
+
         }
-        // echo "<td>" . round(($present / $classesConducted) * 100, 2) . "</td>";
-        $html .= "<td>" . $classesConducted-- . "</td>";
+        $classesConducted--;
     }
 
     $html .=  "</table>";

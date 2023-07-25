@@ -56,9 +56,20 @@ $userDetails = $faculty->getUserdetails();
     ?>
     <div id="subSelect" style="display: none;"></div>
     <div id="uploadMessage"></div>
+    <div id="uploadSelectContainer" style="display: none;">
+        <label for="uploadSelect">Select attendence Date</label>
+        <select name="uploadSelect" id="uploadOptionSelect" class="uploadDate">
+            <option value="0" id="dummySelect">Select upload Date</option>
+            <option value="1">Today</option>
+            <option value="2">Select Date</option>
+        </select>
+        <div id="uploadDateContainer" style="display: none;">
+            <input type="date" name="uploadDate" id="uploadDate">
+        </div>
+    </div>
     <div id="uploadFile" style="display: none;">
         <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" name="fileToupload" class="attendenceFile" accept=".csv,.xlsx,xls" multiple = "false">
+            <input type="file" name="fileToupload" class="attendenceFile" accept=".csv,.xlsx,xls" multiple="false">
             <input type="submit" value="upload" id="submitButton">
         </form>
     </div>
