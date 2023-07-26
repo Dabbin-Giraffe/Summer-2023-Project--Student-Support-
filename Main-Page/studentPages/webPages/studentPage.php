@@ -5,7 +5,6 @@
 <?php
 session_start();
 
-
 if (!(isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE["login"]) && ($_COOKIE["login"] == true))) {
     header("Location:../../loginPages/login.php");
 }
@@ -41,7 +40,6 @@ $semesterCount = $student->semesterCount;
         let maxClasses = JSON.parse('<?php echo $student->jsonEncoder($student->maxClasses); ?>');
         let minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>');
         let flag = "<?php echo $student->flag; ?>";
-
     </script>
     <script src="studentPage.js"></script>
 

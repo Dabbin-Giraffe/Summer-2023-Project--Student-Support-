@@ -108,3 +108,13 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 // if($conn->query($stmt)){
 //     echo "suc";
 // }
+
+// $stmt = "DELETE FROM attendence WHERE semester = 1";
+// if ($conn->query($stmt)) {
+//     echo "suc";
+// }
+
+// $stmt = "INSERT INTO semesterdates (flag,semester,startDate,endDate) VALUES (1,1,'2022-01-15','2022-04-15')";
+// if ($conn->query($stmt)) {
+//     echo "suc";
+// }

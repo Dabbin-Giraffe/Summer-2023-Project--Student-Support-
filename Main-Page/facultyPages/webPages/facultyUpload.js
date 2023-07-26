@@ -1,10 +1,14 @@
 
+console.log("fge");
 // Year selection part
 $(document).ready(function () {
     let yearSelectIndex;
     let subSelect;
     let dateOption;
     let selectDate;
+    let startDate;
+    let endDate;
+
     if (userDetails["years"].length > 1) {
         $(".yearSelection").change(function () {
             yearSelectIndex = $(".yearSelection:checked").attr("id");
@@ -76,7 +80,38 @@ $(document).ready(function () {
             //Deals with option 2, manual select Date
 
             if (dateOption == "2") {
-                $("#uploadDateContainer").show();
+                $("#uploadFile").hide();
+                console.log("here");
+                let dateDetails = {
+                    "subjectCode": userDetails["subjectCode"][yearSelectIndex][subSelect],
+                    "flag": userDetails["flags"][yearSelectIndex],
+                }
+
+                dateDetails = JSON.stringify(dateDetails);
+
+
+                $.ajax({
+                    url: '../utilityFiles/subjectDatesFetch.php',
+                    type: 'POST',
+                    data: dateDetails,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            startDate = response.startDate;
+                            endDate = response.endDate;
+                            console.log(startDate, " ", endDate);
+                            $("#uploadDate").prop("min", startDate);
+                            $("#uploadDate").prop("max", endDate);
+                            $("#uploadDateContainer").show();
+                        }
+                    },
+                    error: function () {
+                        console.log("error js side?");
+                    }
+                })
+
             } else {
                 $("#uploadDateContainer").hide();
             }
@@ -84,8 +119,14 @@ $(document).ready(function () {
 
         $("#uploadDate").change(function () {
             selectDate = $(this).val();
+
             if (selectDate) {
                 $("#uploadFile").show(); //shows upload file option
+                $("#submitButton").prop("disabled", false);
+                $("#responseMessage").empty();
+                $("#attendenceLog").empty();
+                $("#fullAttendence").hide();
+
             } else {
                 $("#uploadFile").hide();
             }
@@ -95,6 +136,7 @@ $(document).ready(function () {
         $("#uploadForm").submit(function (e) {
             e.preventDefault();
             $("#submitButton").prop("disabled", true);
+            $("#uploadDate").val("0");
 
             //Sets up the AJAX data that needs to be sent over
 

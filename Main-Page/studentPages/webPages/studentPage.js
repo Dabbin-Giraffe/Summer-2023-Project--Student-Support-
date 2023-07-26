@@ -7,6 +7,7 @@ $(document).ready(function () {
     let subCode;
     let subLogIndex;
     let details;
+    let minDate, maxDate;
     console.log("gello")
     /*Helps in dynamic generation of Dropdown boxes. The dropdown for semester
     is created dynamically by php and that data
@@ -37,7 +38,35 @@ $(document).ready(function () {
     selectElementId.change(function () {
         $("#selectHide").hide();
         selectSub = parseInt($(this).val());
-        $(".dateInputlog").show();
+
+        let dateDetails = {
+            "subjectCode": subjectCode[selectSem - 1][selectSub],
+            "flag": flag
+        }
+        dateDetails = JSON.stringify(dateDetails);
+
+        $.ajax({
+            url: '../utilityFiles/subjectDatesFetch.php',
+            type: 'POST',
+            data: dateDetails,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.success) {
+                    minDate = response.startDate;
+                    maxDate = response.endDate;
+                    $("#fromDate").prop("min", minDate);
+                    $("#fromDate").prop("max", maxDate);
+                    $("#toDate").prop("min", minDate);
+                    $("#toDate").prop("max", maxDate);
+                    $(".dateInputlog").show();
+                }
+            },
+            error: function () {
+                console.log("error js side?");
+            }
+        })
 
         console.log(selectSub);
 
