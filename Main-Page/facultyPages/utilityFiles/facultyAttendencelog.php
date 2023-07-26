@@ -7,7 +7,7 @@ $selectSubindex = $_POST["selectSubindex"];
 
 $selectSubcode = $_POST["subjectCode"][$selectYearindex][$selectSubindex];
 $selectSubname = $_POST["subjectName"][$selectYearindex][$selectSubindex];
-$date =  date("Y-m-d");
+$date =  $_POST["date"]; 
 $studentID = [];
 $attendence = [];
 $studentName = [];

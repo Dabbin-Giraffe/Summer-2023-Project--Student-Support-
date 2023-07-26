@@ -1,8 +1,14 @@
 
+console.log("fge");
 // Year selection part
 $(document).ready(function () {
     let yearSelectIndex;
     let subSelect;
+    let dateOption;
+    let selectDate;
+    let startDate;
+    let endDate;
+
     if (userDetails["years"].length > 1) {
         $(".yearSelection").change(function () {
             yearSelectIndex = $(".yearSelection:checked").attr("id");
@@ -40,47 +46,140 @@ $(document).ready(function () {
         $(".subSelect").change(function () {
             subSelect = $('.subSelect:checked').val();
 
+            // Uploading to respective subject message
             $("#uploadMessage").text("You are uploading to " + userDetails["subjectName"][yearSelectIndex][subSelect] + "(" + userDetails["subjectCode"][yearSelectIndex][subSelect] + ")")
-            $("#uploadFile").show();
+            $("#uploadForm")[0].reset(); //removes any uploaded file if user changes the subject select
+            $("#attendenceLog").empty(); // Clears the attendence log
+            $("#fullAttendence").hide(); //Hides the attendence button incase user changes option
+            $("#responseMessage").empty(); //Same thing erases all the message content
+            $("#submitButton").prop("disabled", false); //disables upload button after submitting one button
 
-            //Deals with file AJAX
+            //Date selection Container
 
-            $("#uploadForm").submit(function (e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                formData.append("subIndexselect", subSelect);
-                formData.append("yearIndexselect", yearSelectIndex);
-                // formData.append("userDetails", userDetails);
-                formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
-                formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect])
+            $("#uploadSelectContainer").show(); //shows the date selector
+            $("#uploadDateContainer").hide();
+            $("#dummySelect").show();
+            $("#uploadOptionSelect").val("0");
+            $("#uploadFile").hide();
+        })
+
+        //Deals with Date select 
+
+        $("#uploadOptionSelect").change(function () {
+            $("#submitButton").prop("disabled", false);
+            $("#dummySelect").hide();
+            dateOption = $(this).val();
+
+            //Deals with option 1, Today Date
+
+            if (dateOption == "1") {
+                selectDate = new Date().toISOString().slice(0, 10);
+                $("#uploadFile").show(); //shows upload file option
+            }
+
+            //Deals with option 2, manual select Date
+
+            if (dateOption == "2") {
+                $("#uploadFile").hide();
+                console.log("here");
+                let dateDetails = {
+                    "subjectCode": userDetails["subjectCode"][yearSelectIndex][subSelect],
+                    "flag": userDetails["flags"][yearSelectIndex],
+                }
+
+                dateDetails = JSON.stringify(dateDetails);
+
+
                 $.ajax({
-                    url: '../utilityFiles/attendenceUpload.php',
+                    url: '../utilityFiles/subjectDatesFetch.php',
                     type: 'POST',
-                    data: formData,
+                    data: dateDetails,
                     dataType: 'json',
                     contentType: false,
                     processData: false,
                     success: function (response) {
                         if (response.success) {
-                            $("#responseMessage").text(response.message);
-                            $("#fullAttendence").show();
-                        } else {
-                            $("#responseMessage").text("error php sidee");
+                            startDate = response.startDate;
+                            endDate = response.endDate;
+                            console.log(startDate, " ", endDate);
+                            $("#uploadDate").prop("min", startDate);
+                            $("#uploadDate").prop("max", endDate);
+                            $("#uploadDateContainer").show();
                         }
                     },
                     error: function () {
                         console.log("error js side?");
                     }
                 })
-                $("#fullAttendence").click(function () {
 
-                    // console.log("clicked");
-                    $("#attendenceLog").empty();
-                    let attendenceLog = userDetails;
-                    attendenceLog["selectSubindex"] = subSelect;
-                    attendenceLog["selectYearindex"] = yearSelectIndex;
-                    $("#attendenceLog").load("../utilityFiles/facultyAttendencelog.php", attendenceLog);
-                })
+            } else {
+                $("#uploadDateContainer").hide();
+            }
+        })
+
+        $("#uploadDate").change(function () {
+            selectDate = $(this).val();
+
+            if (selectDate) {
+                $("#uploadFile").show(); //shows upload file option
+                $("#submitButton").prop("disabled", false);
+                $("#responseMessage").empty();
+                $("#attendenceLog").empty();
+                $("#fullAttendence").hide();
+
+            } else {
+                $("#uploadFile").hide();
+            }
+        })
+
+        //Deals with file Upload AJAX
+        $("#uploadForm").submit(function (e) {
+            e.preventDefault();
+            $("#submitButton").prop("disabled", true);
+            $("#uploadDate").val("0");
+
+            //Sets up the AJAX data that needs to be sent over
+
+            let formData = new FormData(this);
+            formData.append("subIndexselect", subSelect);
+            formData.append("yearIndexselect", yearSelectIndex);
+            formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
+            formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect]);
+            formData.append("userID", userDetails["id"]);
+            formData.append("date", selectDate);
+            //AJAX stuff
+
+            $.ajax({
+                url: '../utilityFiles/attendenceUpload.php',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        $("#responseMessage").text(response.message);
+                        $("#fullAttendence").show();
+                    } else {
+                        $("#responseMessage").text("error php sidee");
+                    }
+                },
+                error: function () {
+                    console.log("error js side?");
+                }
+            })
+
+            //Show attendence log button
+
+            $("#fullAttendence").click(function () {
+                let attendenceLog = userDetails;
+                attendenceLog["selectSubindex"] = subSelect;
+                attendenceLog["selectYearindex"] = yearSelectIndex;
+                attendenceLog["date"] = selectDate;
+
+                //Loads up the fetched Date
+
+                $("#attendenceLog").load("../utilityFiles/facultyAttendencelog.php", attendenceLog);
             })
         })
     }
