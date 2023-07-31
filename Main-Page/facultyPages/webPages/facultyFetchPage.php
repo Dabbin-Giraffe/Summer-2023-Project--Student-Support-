@@ -20,21 +20,18 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyFetch.js"></script>
-    <link rel="stylesheet" href="facultyNavbarStyle.css">
-    <link rel="stylesheet" href="facultyFetchStyle.css">
+    <script src="facultyFetch.js?v=3"></script>
+    <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
+    <style>
+        .searchHidden {
+            display: none;
+        }
+    </style>
     <title>Document</title>
 </head>
-<header>
-    <nav>
-        <ul class="navbar">
-            <li><a href="facultyUploadPage.php">Upload</a></li>
-            <li class="active"><a href="facultyFetchPage.php">Fetch Details</a></li>
-            <li><a href="../../loginPages/logout.php">Logout</a></li>
-        </ul>
-    </nav>
-    <h3>Welcome <?php echo $_SESSION["firstName"] . " " . $_SESSION["lastName"] ?></h3>
-</header>
+<?php
+include "navbar.php"
+?>
 
 <body>
     <?php
@@ -48,10 +45,14 @@ $userDetails = $faculty->getUserdetails();
         echo "<h4>" . $userDetails["years"][0] . "</h4>";
     }
     ?>
-    <div id="subSelect" style="display: none;"></div>
+    <div id="subSelect" style="display: none;">
+        <b>Choose a subject : </b>
+    </div>
     <div id="search" class="searchHidden">
         <input type="text" name="studentSearch" id="studentSearch">
         <button id="studentSearchButton">Search</button>
+        <button id="saveChanges" class="radioChanges" style="display: none;">Submit Changes</button>
+        <small class="radioChanges" style="color : red;display : none">*If changes are not submitted, the data won't be updated</small>
     </div>
     <div id="attendenceFetchtable"></div>
 </body>

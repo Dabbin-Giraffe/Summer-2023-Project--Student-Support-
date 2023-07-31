@@ -26,21 +26,13 @@ $userDetails = $faculty->getUserdetails();
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
     <script src="facultyUpload.js?v=1"></script>
+    <link rel="stylesheet" href="facultyNavbarStyle.css?v=3">
 
-    <link rel="stylesheet" href="facultyNavbarStyle.css">
 </head>
 
-<header>
-    <nav>
-        <ul class="navbar">
-            <li class="active"><a href="facultyUploadPage.php">Upload</a></li>
-            <li><a href="facultyFetchPage.php">Fetch Details</a></li>
-            <li><a href="../../loginPages/logout.php">Logout</a></li>
-        </ul>
-    </nav>
-    <h3>Welcome <?php echo $_SESSION["firstName"] . " " . $_SESSION["lastName"] ?></h3>
-
-</header>
+<?php
+include "navbar.php"
+?>
 
 <body>
     <?php

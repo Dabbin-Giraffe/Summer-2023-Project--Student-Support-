@@ -15,6 +15,9 @@ $(document).ready(function () {
     let studentID;
     let subSelect;
     let attendenceTable;
+    let defaultAttendence = [];
+    let changedAttendence = [];
+
 
     // Year selection part
 
@@ -87,12 +90,12 @@ $(document).ready(function () {
                 "year": userDetails["years"][yearSelectIndex]
             }
 
-            Details = JSON.stringify(Details);
+            fetchDetails = JSON.stringify(Details);
 
             $.ajax({
                 url: "../utilityFiles/studentAttendencefetch.php",
                 type: "POST",
-                data: Details,
+                data: fetchDetails,
                 dataType: 'json',
                 contentType: false,
                 processData: false,
@@ -100,6 +103,8 @@ $(document).ready(function () {
                     if (response.success) {
                         attendenceTable = response.table;
                         $("#attendenceFetchtable").html(attendenceTable);
+                        $(".radioChanges").show();
+                        defaultAttendence = response.result;
                     } else {
                         console.log("brhe");
                     }
@@ -107,6 +112,42 @@ $(document).ready(function () {
                 error: function () {
                     console.log("error js side");
                 }
+            })
+
+            // Deals with getting the radio button data and also sending over AJAX data to php file so that we can push the changes to mysql table
+
+            $("#saveChanges").click(function () {
+                $('table tr').each(function (index, row) {
+                    let setName = $(row).find('input[type="radio"]').attr('id');
+                    if (setName) {
+                        let selectedValue = $(row).find('input[type="radio"]:checked').val();
+                        changedAttendence.push({ "id": setName.split('+')[0], "attendence": selectedValue });
+                    }
+                })
+
+                let editAttendenceDetails = Details;
+                editAttendenceDetails["defaultAttendence"] = defaultAttendence;
+                editAttendenceDetails["changedAttendence"] = changedAttendence;
+
+                editAttendenceDetails = JSON.stringify(editAttendenceDetails);
+                console.log(editAttendenceDetails);
+                $.ajax({
+                    url: "../utilityFiles/editAttendence.php",
+                    type: "POST",
+                    data: editAttendenceDetails,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            console.log(response["changedVals"]);
+                        }
+                    },
+                    error: function () {
+                        console.log("error js side");
+                    }
+                })
+
             })
 
         })

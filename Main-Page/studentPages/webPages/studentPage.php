@@ -41,7 +41,7 @@ $semesterCount = $student->semesterCount;
         let minimumRequired = JSON.parse('<?php echo $student->jsonEncoder($student->minimumRequired); ?>');
         let flag = "<?php echo $student->flag; ?>";
     </script>
-    <script src="studentPage.js"></script>
+    <script src="studentPage.js?v=1"></script>
 
 </head>
 
@@ -74,9 +74,9 @@ $semesterCount = $student->semesterCount;
     <div id="tableDiv" style="display : none;border : 2px solid black"></div>
     <div>
         <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">From - </label>
-        <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="fromDate" id="fromDate">
+        <input style="display:none;margin : 10px;" class="dateInputlog dateInputs" type="date" name="fromDate" id="fromDate">
         <label for="fromDate" style="display : none;margin:10px;" class="dateInputlog">To - </label>
-        <input style="display:none;margin : 10px;" class="dateInputlog" type="date" name="toDate" id="toDate">
+        <input style="display:none;margin : 10px;" class="dateInputlog dateInputs" type="date" name="toDate" id="toDate">
         <button type="submit" style="display : none;margin:10px;" class="dateInputlog" id="dateSubmit">Submit</button>
     </div>
     <div id="logDiv" style="display:none;margin : 10px;">

@@ -60,6 +60,7 @@ $(document).ready(function () {
                     $("#fromDate").prop("max", maxDate);
                     $("#toDate").prop("min", minDate);
                     $("#toDate").prop("max", maxDate);
+                   
                     $(".dateInputlog").show();
                 }
             },
@@ -96,12 +97,15 @@ $(document).ready(function () {
         if (selectSub == -1) {
             //Deals with subject selection during all subject view
             $("#logDiv").empty();
+            $(".dateInputlog").hide();
             $(document).on("click", ".subjectLog", function () {
                 subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
                 subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
                 logDetails["selectSub"] = subLogIndex;
                 logDetails["fullLog"] = 0;
                 $("#logDiv").load("../utilityFiles/attendencelog.php", logDetails, function () {
+                    $(".dateInputlog").show()
+                    $(".dateInputs").val("0");
                     $("#logDiv").show();
 
                     let fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
