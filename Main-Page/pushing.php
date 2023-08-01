@@ -118,3 +118,50 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 // if ($conn->query($stmt)) {
 //     echo "suc";
 // }
+
+
+// $changedAttendence = [
+//     [
+//         "attendence" => 0,
+//         "id" => 4
+//     ]
+// ];
+// $defaultAttendence = [
+//     [
+//         "attendence" => 1,
+//         "id" => 4
+//     ]
+// ];
+
+
+// function uploadData($conn, $defaultAttendence, $changedAttendence)
+// {
+//     $changedVals = [];
+
+//     for ($i = 0; $i < count($changedAttendence); $i++) {
+//         if ($defaultAttendence[$i]["attendence"] != $changedAttendence[$i]["attendence"]) {
+//             $changedVals[] = [
+//                 "id" => $changedAttendence[$i]["id"],
+//                 "attendence" => $changedAttendence[$i]["attendence"]
+//             ];
+//         }
+//     }
+
+//     foreach ($changedVals as $value) {
+//         $stmt = $conn->prepare("UPDATE attendence SET attendence = ? WHERE id = ?");
+//         $stmt->bind_param("ii", $value["attendence"], $value["id"]);
+//         if (!($stmt->execute())) {
+//             $stmt->close();
+//             echo "sql error";
+//         }
+//         $stmt->close();
+//     }
+//     echo "success";
+// }
+
+// uploadData($conn,$defaultAttendence,$changedAttendence);
+
+// $stmt = "INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES ('SE21UCSE198','2022-01-16',1,'EC1101',1,1)";
+// if($conn->query($stmt)){
+//     echo "suc";
+// }

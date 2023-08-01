@@ -20,7 +20,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyFetch.js?v=3"></script>
+    <script src="facultyFetch.js?v=5"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
     <style>
         .searchHidden {
@@ -28,33 +28,40 @@ $userDetails = $faculty->getUserdetails();
         }
     </style>
     <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <?php
 include "navbar.php"
 ?>
 
 <body>
-    <?php
-    if (count($userDetails["years"]) > 1) {
-        for ($i = 0; $i < count($userDetails["years"]); $i++) {
+    <div class="container mt-5">
+        <?php
+        if (count($userDetails["years"]) > 1) {
+            for ($i = 0; $i < count($userDetails["years"]); $i++) {
 
-            echo "<input class = 'yearSelection' id = '" . $i . "' type = 'radio' value = '" . $i . "'>";
-            echo "<label for = '" . $userDetails["years"][$i] . "'>" . $userDetails["years"][$i] . "</label>";
+                echo "<input class = 'yearSelection' id = '" . $i . "' type = 'radio' value = '" . $i . "'>";
+                echo "<label for = '" . $userDetails["years"][$i] . "'>" . $userDetails["years"][$i] . "</label>";
+            }
+        } else {
+            echo "<h4>" . $userDetails["years"][0] . "</h4>";
         }
-    } else {
-        echo "<h4>" . $userDetails["years"][0] . "</h4>";
-    }
-    ?>
-    <div id="subSelect" style="display: none;">
-        <b>Choose a subject : </b>
+        ?>
+        <div id="subSelect" style="display: none;">
+            <b>Choose a subject : </b>
+        </div>
+        <div id="search" class="searchHidden">
+            <div class="input-group mb-3">
+                <input type="text" name="studentSearch" class="form-control" placeholder="Search students" id="studentSearch">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" id="studentSearchButton">Search</button>
+                </div>
+            </div>
+            <button id="saveChanges" class="btn btn-success radioChanges" style="display: none;">Submit Changes</button>
+            <small class="text-danger radioChanges" style="color : red;display : none">*If changes are not submitted, the data won't be updated</small>
+        </div>
+        <div id="attendenceFetchtable"></div>
     </div>
-    <div id="search" class="searchHidden">
-        <input type="text" name="studentSearch" id="studentSearch">
-        <button id="studentSearchButton">Search</button>
-        <button id="saveChanges" class="radioChanges" style="display: none;">Submit Changes</button>
-        <small class="radioChanges" style="color : red;display : none">*If changes are not submitted, the data won't be updated</small>
-    </div>
-    <div id="attendenceFetchtable"></div>
 </body>
 
 </html

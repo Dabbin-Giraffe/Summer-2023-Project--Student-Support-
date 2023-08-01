@@ -8,6 +8,30 @@ function cleanStudentID(studentID) {
     return studentID;
 }
 
+function loadAttendenceLog(fetchDetails) {
+
+    $.ajax({
+        url: "../utilityFiles/studentAttendencefetch.php",
+        type: "POST",
+        data: fetchDetails,
+        dataType: 'json',
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                let attendenceTable = response.table;
+                $("#attendenceFetchtable").html(attendenceTable);
+                $(".radioChanges").show();
+                return response.result;
+            }
+        },
+        error: function () {
+            console.log("error js side in attendence log function");
+        }
+    })
+
+}
+
 $(document).ready(function () {
 
     //User Details var has all the faculty subject years etc
@@ -29,7 +53,7 @@ $(document).ready(function () {
     } else {
         yearSelectIndex = 0;
     }
-    console.log(yearSelectIndex);
+    // console.log(yearSelectIndex);
 
     if (yearSelectIndex != null) {
         let subjectRadio = [];
@@ -40,14 +64,16 @@ $(document).ready(function () {
                 "value": i
             }
         }
-        console.log(subjectRadio);
+        // console.log(subjectRadio);
 
         //Creating radio buttons
 
         let radioHtml = "";
         $.each(subjectRadio, function (index, option) {
-            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
-            radioHtml += "<label for = '" + option.id + "' >" + option.label + '</label>';
+            radioHtml+="<div class='form-check'>";
+            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
+            radioHtml += "<label class = 'form-check-label' for = '" + option.id + "' >" + option.label + '</label>';
+            radioHtml += "</div>";
         });
         $("#subSelect").append(radioHtml);
         $("#subSelect").show();
@@ -57,7 +83,7 @@ $(document).ready(function () {
 
     $(".subSelect").change(function () {
         subSelect = $('.subSelect:checked').val();
-        console.log(subSelect);
+        // console.log(subSelect);
 
         //Deals with the search student thing 
 
@@ -90,29 +116,9 @@ $(document).ready(function () {
                 "year": userDetails["years"][yearSelectIndex]
             }
 
-            fetchDetails = JSON.stringify(Details);
+            let fetchDetails = JSON.stringify(Details);
 
-            $.ajax({
-                url: "../utilityFiles/studentAttendencefetch.php",
-                type: "POST",
-                data: fetchDetails,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if (response.success) {
-                        attendenceTable = response.table;
-                        $("#attendenceFetchtable").html(attendenceTable);
-                        $(".radioChanges").show();
-                        defaultAttendence = response.result;
-                    } else {
-                        console.log("brhe");
-                    }
-                },
-                error: function () {
-                    console.log("error js side");
-                }
-            })
+            defaultAttendence = loadAttendenceLog(fetchDetails);
 
             // Deals with getting the radio button data and also sending over AJAX data to php file so that we can push the changes to mysql table
 
@@ -130,7 +136,7 @@ $(document).ready(function () {
                 editAttendenceDetails["changedAttendence"] = changedAttendence;
 
                 editAttendenceDetails = JSON.stringify(editAttendenceDetails);
-                console.log(editAttendenceDetails);
+                // console.log(editAttendenceDetails);
                 $.ajax({
                     url: "../utilityFiles/editAttendence.php",
                     type: "POST",
@@ -140,7 +146,7 @@ $(document).ready(function () {
                     processData: false,
                     success: function (response) {
                         if (response.success) {
-                            console.log(response["changedVals"]);
+                            loadAttendenceLog(fetchDetails);
                         }
                     },
                     error: function () {

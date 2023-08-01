@@ -58,13 +58,15 @@ function constructTableAttendenceEdit($conn, $subjectID, $studentID)
     }
     $stmt->close();
 
-    $html .= "<table>
+    $html .= "<table class = 'table table-bordered'>
+    <thead>
         <tr>
         <th>Sno.</th>
         <th>Date</th>
         <th>Attendance Marked</th>
         <th>Edit Attendence</th>
-        </tr>";
+        </tr>
+        </thead><tbody>";
     $sno = 1;
 
     foreach ($result as $value) {
@@ -86,7 +88,7 @@ function constructTableAttendenceEdit($conn, $subjectID, $studentID)
         }
         $html .= "</tr>";
     }
-    $html .= "</table>";
+    $html .= "</tbody></table>";
     $data = [
         "html" => $html,
         "result" => $result

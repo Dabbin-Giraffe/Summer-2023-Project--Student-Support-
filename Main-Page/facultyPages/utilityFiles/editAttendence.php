@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $defaultAttendence = $Details["defaultAttendence"];
     $changedAttendence = $Details["changedAttendence"];
 
-
+    
     $changeStatus = uploadData($conn, $defaultAttendence, $changedAttendence);
 
     $response = [
@@ -44,9 +44,7 @@ function uploadData($conn, $defaultAttendence, $changedAttendence)
     foreach ($changedVals as $value) {
         $stmt = $conn->prepare("UPDATE attendence SET attendence = ? WHERE id = ?");
         $stmt->bind_param("ii", $value["attendence"], $value["id"]);
-        if (!($stmt->execute())) {
-            return "sql error";
-        }
+        $stmt->execute();
         $stmt->close();
     }
     return "success";
