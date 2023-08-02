@@ -14,24 +14,26 @@ $id = $_SESSION["id"];
 
 <!-- Table Construction -->
 
-<table>
-    <tr>
-        <th>Subject Code</th>
-        <th>Subject Name</th>
-        <th>Classes Attended</th>
-        <th>Classes Conducted</th>
-        <th>Attendence Percentage</th>
-        <th>Required Percentage</th>
-        <th>Max Planned</th>
-    </tr>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Classes Attended</th>
+            <th>Classes Conducted</th>
+            <th>Attendence Percentage</th>
+            <th>Required Percentage</th>
+            <th>Max Planned</th>
+        </tr>
+    </thead>
     <?php
     if ($selectSub == -1) {
         for ($i = 0; $i < count($subjectName[$selectSem - 1]); $i++) {
-            generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub);
+            generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i, $selectSub);
         }
     } else {
         $i = $selectSub;
-        generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub);
+        generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i, $selectSub);
     }
     ?>
 </table>
@@ -39,7 +41,7 @@ $id = $_SESSION["id"];
 
 // Dynamically generates rows for table to display subjects
 
-function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub)
+function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i, $selectSub)
 {
     $classesconducted = 0; //needed for attendence calculation and the class number column
     $attendence = 0;

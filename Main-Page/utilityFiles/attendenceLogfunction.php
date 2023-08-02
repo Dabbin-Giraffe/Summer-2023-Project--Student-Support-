@@ -33,14 +33,15 @@ function attendenceLog($id, $subjectid, $fullLog, $conn, $fromDate = "2000-01-01
         $limit = 3;
     }
 
-    $html = "<table>
+    $html = "<table class='table table-bordered'>
+    <thead>
             <tr>
                 <th>Date</th>
                 <th>Attendence Status</th>
                 <th>Attendended Classes</th>
                 <th>Attendence Percent</th>
                 <th>Class Number</th>
-            </tr>";
+            </tr></thead>";
 
     foreach ($result as $value) {
         if (!($limit--)) {

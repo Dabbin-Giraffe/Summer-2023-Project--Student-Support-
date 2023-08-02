@@ -70,7 +70,7 @@ $(document).ready(function () {
 
         let radioHtml = "";
         $.each(subjectRadio, function (index, option) {
-            radioHtml+="<div class='form-check'>";
+            radioHtml += "<div class='form-check'>";
             radioHtml += "<input name = 'subSelect' type = 'radio' class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
             radioHtml += "<label class = 'form-check-label' for = '" + option.id + "' >" + option.label + '</label>';
             radioHtml += "</div>";
@@ -150,6 +150,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function () {
+                        loadAttendenceLog(fetchDetails);
                         console.log("error js side");
                     }
                 })

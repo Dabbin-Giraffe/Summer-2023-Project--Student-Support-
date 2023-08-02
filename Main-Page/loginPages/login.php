@@ -28,15 +28,18 @@ if (isset($_SESSION["login"]) && ($_SESSION["login"] == true) && isset($_COOKIE[
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="loginPageStyleSheet.css?v=3">
+    <link rel="stylesheet" href="loginPageStyleSheet.css?v=4">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="loginCheck.js"></script>
     <title>Document</title>
 </head>
 
 <body>
-    <div class="container mt-5 login-container">
-        <div class="row justify-content-center">
+    <div class="container mt-5">
+        <div class="row justify-content-center welcome-text">
+            <h1>Welcome!</h1>
+        </div>
+        <div class="row justify-content-center login-container">
             <div class="col-md-6">
                 <h2 class="text-center mb-4">Login page</h2>
                 <?php if ($errorMessage) : ?>

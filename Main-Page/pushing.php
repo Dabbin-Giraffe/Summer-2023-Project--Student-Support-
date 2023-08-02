@@ -161,7 +161,7 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 
 // uploadData($conn,$defaultAttendence,$changedAttendence);
 
-// $stmt = "INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES ('SE21UCSE198','2022-01-16',1,'EC1101',1,1)";
-// if($conn->query($stmt)){
-//     echo "suc";
-// }
+$stmt = "INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES ('SE21UCSE198','2022-01-16',1,'EC1101',1,1)";
+if($conn->query($stmt)){
+    echo "suc";
+}

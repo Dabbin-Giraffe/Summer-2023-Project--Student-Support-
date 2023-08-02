@@ -9,7 +9,7 @@ $(document).ready(function () {
     let details;
     let minDate, maxDate;
     console.log("gello")
-    /*Helps in dynamic generation of Dropdown boxes. The dropdown for semester
+    /*Helps in dynamic generation of Dropdown boxes. The dropdown for seestmer
     is created dynamically by php and that data
     is sent to JS, very weird but thats how i managed to make it work for now*/
 
@@ -60,7 +60,7 @@ $(document).ready(function () {
                     $("#fromDate").prop("max", maxDate);
                     $("#toDate").prop("min", minDate);
                     $("#toDate").prop("max", maxDate);
-                   
+
                     $(".dateInputlog").show();
                 }
             },
@@ -98,6 +98,7 @@ $(document).ready(function () {
             //Deals with subject selection during all subject view
             $("#logDiv").empty();
             $(".dateInputlog").hide();
+            $("#fullLog").hide();
             $(document).on("click", ".subjectLog", function () {
                 subCode = $(this).attr("id"); //Fetching Id of selected anchor tag
                 subLogIndex = subjectCode[selectSem - 1].indexOf(subCode); // Index of the selected anchor tag
@@ -108,8 +109,7 @@ $(document).ready(function () {
                     $(".dateInputs").val("0");
                     $("#logDiv").show();
 
-                    let fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
-                    $("#logDiv").append(fullLogButton);
+                    $("#fullLog").show();
                 })
             })
         }
@@ -119,9 +119,7 @@ $(document).ready(function () {
         if (selectSub != -1) {
             $("#logDiv").load("../utilityFiles/attendencelog.php", logDetails, function () {
                 $("#logDiv").show();
-
-                let fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
-                $("#logDiv").append(fullLogButton);
+                $("#fullLog").show();
             })
         }
 
@@ -135,6 +133,8 @@ $(document).ready(function () {
         }
         logDetails["fullLog"] = 1; //setting bool to 1
         $("#logDiv").load("../utilityFiles/attendencelog.php", logDetails);
+        $("#fullLog").hide();
+
     });
 
     $("#dateSubmit").click(function () {
@@ -179,8 +179,7 @@ $(document).ready(function () {
                     $("#logDiv").empty();
                     let tableConstruct = response.tableConstruct;
                     $("#logDiv").html(tableConstruct);
-                    let fullLogButton = $("<button>").attr("id", "fullLog").text("View full Log");
-                    $("#logDiv").append(fullLogButton);
+                    $("#fullLog").show();
                     console.log("suc");
                 }
             },
