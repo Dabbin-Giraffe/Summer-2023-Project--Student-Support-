@@ -14,7 +14,7 @@ $id = $_SESSION["id"];
 
 <!-- Table Construction -->
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>Subject Code</th>
@@ -69,14 +69,14 @@ function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRe
     $presentPercentage = round(($present / $classesconducted) * 100, 2);
 
 
-    echo "<tr>";
+    echo "<tr class='subjectLog' id='" . $subjectCode[$selectSem - 1][$i] . "'>";
     echo "<td>" . $subjectCode[$selectSem - 1][$i] . "</td>";
     //This is related to the "all" selector, adds classes and ids depeding on this "all" thing
     if ($selectSub != -1) {
         echo "<td>" . $subjectName[$selectSem - 1][$i] . "</td>";
     }
     if ($selectSub == -1) {
-        echo "<td><a href='javascript:void(0)' id='" . $subjectCode[$selectSem - 1][$i] . "' class='subjectLog'>" . $subjectName[$selectSem - 1][$i] . "</a></td>";
+        echo "<td>" . $subjectName[$selectSem - 1][$i] . "</td>";
     }
     echo "<td>" . $present . "</td>";
     echo "<td>" . $classesconducted . "</td>";

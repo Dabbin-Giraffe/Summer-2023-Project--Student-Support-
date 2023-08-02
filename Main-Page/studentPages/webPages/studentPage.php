@@ -56,7 +56,11 @@ $semesterCount = $student->semesterCount;
 
 <body>
     <div class="container mt-5">
-        <!-- Dynamic sem selector -->
+        <div class="jumbotron">
+            <div class="container">
+                <h1 class="display-4">Welcome Back, <?php echo $firstName . " " . $lastName; ?></h1>
+            </div>
+        </div>
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">

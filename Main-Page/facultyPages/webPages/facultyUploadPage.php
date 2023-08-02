@@ -26,7 +26,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyUpload.js?v=1"></script>
+    <script src="facultyUpload.js?v=2"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=3">
 
 </head>
@@ -37,23 +37,32 @@ include "navbar.php"
 
 <body>
     <div class="container mt-5">
-        <?php
-        if (count($userDetails["years"]) > 1) {
-            echo '<div class="row">';
-            for ($i = 0; $i < count($userDetails["years"]); $i++) {
-                echo '<div class="col-md-2">';
-                echo '<div class="form-check">';
-                echo '<input class="form-check-input yearSelection" id="year' . $i . '" type="radio" value="' . $i . '">';
-                echo '<label class="form-check-label" for="year' . $i . '">' . $userDetails["years"][$i] . '</label>';
-                echo '</div>';
-                echo '</div>';
-            }
-            echo '</div>';
-        } else {
-            echo '<h4>' . $userDetails["years"][0] . '</h4>';
-        }
-        ?>
-        <div id="subSelect" style="display: none;" class="my-3"></div>
+        <div class="form-group">
+            <div class="row">
+
+                <div class="col md-7">
+                    <?php
+                    if (count($userDetails["years"]) > 1) {
+                        echo '<div class="row">';
+                        for ($i = 0; $i < count($userDetails["years"]); $i++) {
+                            echo '<div class="col-md-2">';
+                            echo '<div class="form-check">';
+                            echo '<input class="form-check-input yearSelection" id="year' . $i . '" type="radio" value="' . $i . '">';
+                            echo '<label class="form-check-label" for="year' . $i . '">' . $userDetails["years"][$i] . '</label>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                    } else {
+                        echo '<h4>' . $userDetails["years"][0] . '</h4>';
+                    }
+                    ?>
+                </div>
+
+                <div id="subSelect" style="display: none;" class="col-md-7"></div>
+
+            </div>
+        </div>
         <div id="uploadMessage" style="display: none;" class="alert alert-info mt-3"></div>
         <div id="uploadSelectContainer" style="display: none;" class="my-3">
             <div class="form-row">
@@ -73,11 +82,15 @@ include "navbar.php"
         </div>
         <div id="uploadFile" style="display: none;">
             <form id="uploadForm" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label class="form-control-label" for="fileToupload">Upload Attendance File</label>
-                    <input type="file" name="fileToupload" class="attendenceFile form-control-file" accept=".csv,.xlsx,xls" multiple="false">
+                <div class="input-group">
+                    <div class="col-md-6 custom-file">
+                        <input type="file" name="fileToupload" class="attendenceFile custom-file-input" accept=".csv,.xlsx,xls" multiple="false">
+                        <label class="custom-file-label" for="fileToupload">Upload Attendance File</label>
+                    </div>
+                    <div class=" col-md-2 input-group-append">
+                        <button type="submit" class="btn btn-primary" id="submitButton">Upload</button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary" id="submitButton">Upload</button>
             </form>
         </div>
         <div id="responseMessage" class="malert alert-success mt-3"></div>
