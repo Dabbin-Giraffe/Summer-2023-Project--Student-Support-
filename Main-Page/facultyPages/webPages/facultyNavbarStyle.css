@@ -1,41 +1,36 @@
-ul.navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
+ul {
+  list-style: none;
+  background: #171818;
+}
+ul li {
+  display: inline-block;
+  position: relative;
+}
+ul li a {
+  display: block;
+  padding: 20px 25px;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  font-size: 20px;
+}
+ul li ul.dropdown li {
+  display: block;
+}
+ul li ul.dropdown {
+  width: 100%;
+  background: #171818;
+  position: absolute;
+  z-index: 999;
+  display: none;
+}
+ul li a:hover {
+  background: #2a2c35;
+}
+ul li:hover ul.dropdown {
+  display: block;
 }
 
-ul.navbar li {
-    float: left;
-}
-
-ul.navbar li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-ul.navbar li a:hover {
-    background-color: #111;
-}
-
-ul.navbar li:last-child {
+li.logout{
     float: right;
-}
-
-/* diables Active Page  */
-
-/* Styling for the active page */
-.navbar li.active {
-    background-color: #111;
-}
-
-.navbar li.active a {
-    pointer-events: none;
-    /* Disables clicking on the anchor tag */
-    
-    /* Darkens the anchor tag */
 }

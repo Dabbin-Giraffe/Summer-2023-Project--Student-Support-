@@ -8,6 +8,30 @@ function cleanStudentID(studentID) {
     return studentID;
 }
 
+function loadAttendenceLog(fetchDetails) {
+
+    $.ajax({
+        url: "../utilityFiles/studentAttendencefetch.php",
+        type: "POST",
+        data: fetchDetails,
+        dataType: 'json',
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response.success) {
+                let attendenceTable = response.table;
+                $("#attendenceFetchtable").html(attendenceTable);
+                $(".radioChanges").show();
+                return response.result;
+            }
+        },
+        error: function () {
+            console.log("error js side in attendence log function");
+        }
+    })
+
+}
+
 $(document).ready(function () {
 
     //User Details var has all the faculty subject years etc
@@ -15,6 +39,9 @@ $(document).ready(function () {
     let studentID;
     let subSelect;
     let attendenceTable;
+    let defaultAttendence = [];
+    let changedAttendence = [];
+
 
     // Year selection part
 
@@ -26,7 +53,7 @@ $(document).ready(function () {
     } else {
         yearSelectIndex = 0;
     }
-    console.log(yearSelectIndex);
+    // console.log(yearSelectIndex);
 
     if (yearSelectIndex != null) {
         let subjectRadio = [];
@@ -37,14 +64,16 @@ $(document).ready(function () {
                 "value": i
             }
         }
-        console.log(subjectRadio);
+        // console.log(subjectRadio);
 
         //Creating radio buttons
 
         let radioHtml = "";
         $.each(subjectRadio, function (index, option) {
-            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
-            radioHtml += "<label for = '" + option.id + "' >" + option.label + '</label>';
+            radioHtml += "<div class='form-check'>";
+            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
+            radioHtml += "<label class = 'form-check-label' for = '" + option.id + "' >" + option.label + '</label>';
+            radioHtml += "</div>";
         });
         $("#subSelect").append(radioHtml);
         $("#subSelect").show();
@@ -54,7 +83,7 @@ $(document).ready(function () {
 
     $(".subSelect").change(function () {
         subSelect = $('.subSelect:checked').val();
-        console.log(subSelect);
+        // console.log(subSelect);
 
         //Deals with the search student thing 
 
@@ -87,26 +116,45 @@ $(document).ready(function () {
                 "year": userDetails["years"][yearSelectIndex]
             }
 
-            Details = JSON.stringify(Details);
+            let fetchDetails = JSON.stringify(Details);
 
-            $.ajax({
-                url: "../utilityFiles/studentAttendencefetch.php",
-                type: "POST",
-                data: Details,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if (response.success) {
-                        attendenceTable = response.table;
-                        $("#attendenceFetchtable").html(attendenceTable);
-                    } else {
-                        console.log("brhe");
+            defaultAttendence = loadAttendenceLog(fetchDetails);
+
+            // Deals with getting the radio button data and also sending over AJAX data to php file so that we can push the changes to mysql table
+
+            $("#saveChanges").click(function () {
+                $('table tr').each(function (index, row) {
+                    let setName = $(row).find('input[type="radio"]').attr('id');
+                    if (setName) {
+                        let selectedValue = $(row).find('input[type="radio"]:checked').val();
+                        changedAttendence.push({ "id": setName.split('+')[0], "attendence": selectedValue });
                     }
-                },
-                error: function () {
-                    console.log("error js side");
-                }
+                })
+
+                let editAttendenceDetails = Details;
+                editAttendenceDetails["defaultAttendence"] = defaultAttendence;
+                editAttendenceDetails["changedAttendence"] = changedAttendence;
+
+                editAttendenceDetails = JSON.stringify(editAttendenceDetails);
+                // console.log(editAttendenceDetails);
+                $.ajax({
+                    url: "../utilityFiles/editAttendence.php",
+                    type: "POST",
+                    data: editAttendenceDetails,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            loadAttendenceLog(fetchDetails);
+                        }
+                    },
+                    error: function () {
+                        loadAttendenceLog(fetchDetails);
+                        console.log("error js side");
+                    }
+                })
+
             })
 
         })

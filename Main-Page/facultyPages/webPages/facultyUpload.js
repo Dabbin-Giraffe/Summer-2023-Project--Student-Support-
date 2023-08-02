@@ -34,19 +34,22 @@ $(document).ready(function () {
         //Creating radio buttons
 
         let radioHtml = "";
+        radioHtml += "<select id='subSelectContainer' class = 'form-control'>"
         $.each(subjectRadio, function (index, option) {
-            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
-            radioHtml += "<label for = '" + option.id + "' >" + option.label + '</label>';
+            radioHtml += "<option class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
+            radioHtml += "" + option.label + '</option>';
         });
+        radioHtml += "</select>"
         $("#subSelect").append(radioHtml);
         $("#subSelect").show();
 
         //deals with getting the selected subject
 
-        $(".subSelect").change(function () {
-            subSelect = $('.subSelect:checked').val();
+        $("#subSelectContainer").change(function () {
+            subSelect = $(this).val();
 
             // Uploading to respective subject message
+            $("#uploadMessage").show();
             $("#uploadMessage").text("You are uploading to " + userDetails["subjectName"][yearSelectIndex][subSelect] + "(" + userDetails["subjectCode"][yearSelectIndex][subSelect] + ")")
             $("#uploadForm")[0].reset(); //removes any uploaded file if user changes the subject select
             $("#attendenceLog").empty(); // Clears the attendence log

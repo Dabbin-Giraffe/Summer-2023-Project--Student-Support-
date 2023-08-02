@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             }
             $response = [
                 "success" => true,
-                "message" => "[" . $date . "] : successfully uploaded attendence data of " . count($attendence) . " students for" . $subjectName . "(" . $subjectID . ")",
+                "message" => "[" . $date . "] : successfully uploaded attendence data of " . count($attendence) . " students for " . $subjectName . "(" . $subjectID . ")",
             ];
 
             header('Content-Type: application/json');

@@ -7,7 +7,7 @@ $selectSubindex = $_POST["selectSubindex"];
 
 $selectSubcode = $_POST["subjectCode"][$selectYearindex][$selectSubindex];
 $selectSubname = $_POST["subjectName"][$selectYearindex][$selectSubindex];
-$date =  $_POST["date"]; 
+$date =  $_POST["date"];
 $studentID = [];
 $attendence = [];
 $studentName = [];
@@ -29,24 +29,29 @@ while ($stmt->fetch()) {
 
 ?>
 
-<table>
-    <th>
-    <td>Sno.</td>
-    <td>Student ID</td>
-    <td>Student Name</td>
-    <td>Attendence Status</td>
-    </th>
-    <?php
-    $html = "";
-    $sno = 0;
-    for ($i = 0; $i < count($studentID); $i++) {
-        $html .= "<tr>";
-        $html .= "<td>" . ++$sno . "</td>";
-        $html .= "<td>" . $studentID[$i] . "</td>";
-        $html .= "<td>" . $studentName[$i] . "</td>";
-        $html .= "<td>" . $attendence[$i] . "</td>";
-        $html .= "</tr>";
-    }
-    echo $html;
-    ?>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sno.</th>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Attendence Status</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <?php
+        $html = "";
+        $sno = 0;
+        for ($i = 0; $i < count($studentID); $i++) {
+            $html .= "<tr>";
+            $html .= "<td>" . ++$sno . "</td>";
+            $html .= "<td>" . $studentID[$i] . "</td>";
+            $html .= "<td>" . $studentName[$i] . "</td>";
+            $html .= "<td>" . $attendence[$i] . "</td>";
+            $html .= "</tr>";
+        }
+        echo $html;
+        ?>
+    </tbody>
 </table>

@@ -21,61 +21,84 @@ $userDetails = $faculty->getUserdetails();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyUpload.js?v=1"></script>
+    <script src="facultyUpload.js?v=2"></script>
+    <link rel="stylesheet" href="facultyNavbarStyle.css?v=3">
 
-    <link rel="stylesheet" href="facultyNavbarStyle.css">
 </head>
 
-<header>
-    <nav>
-        <ul class="navbar">
-            <li class="active"><a href="facultyUploadPage.php">Upload</a></li>
-            <li><a href="facultyFetchPage.php">Fetch Details</a></li>
-            <li><a href="../../loginPages/logout.php">Logout</a></li>
-        </ul>
-    </nav>
-    <h3>Welcome <?php echo $_SESSION["firstName"] . " " . $_SESSION["lastName"] ?></h3>
-
-</header>
+<?php
+include "navbar.php"
+?>
 
 <body>
-    <?php
-    if (count($userDetails["years"]) > 1) {
-        for ($i = 0; $i < count($userDetails["years"]); $i++) {
+    <div class="container mt-5">
+        <div class="form-group">
+            <div class="row">
 
-            echo "<input class = 'yearSelection' id = '" . $i . "' type = 'radio' value = '" . $i . "'>";
-            echo "<label for = '" . $userDetails["years"][$i] . "'>" . $userDetails["years"][$i] . "</label>";
-        }
-    } else {
-        echo "<h4>" . $userDetails["years"][0] . "</h4>";
-    }
-    ?>
-    <div id="subSelect" style="display: none;"></div>
-    <div id="uploadMessage"></div>
-    <div id="uploadSelectContainer" style="display: none;">
-        <label for="uploadSelect">Select attendence Date</label>
-        <select name="uploadSelect" id="uploadOptionSelect" class="uploadDate">
-            <option value="0" id="dummySelect">Select upload Date</option>
-            <option value="1">Today</option>
-            <option value="2">Select Date</option>
-        </select>
-        <div id="uploadDateContainer" style="display: none;">
-            <input type="date" name="uploadDate" id="uploadDate">
+                <div class="col md-7">
+                    <?php
+                    if (count($userDetails["years"]) > 1) {
+                        echo '<div class="row">';
+                        for ($i = 0; $i < count($userDetails["years"]); $i++) {
+                            echo '<div class="col-md-2">';
+                            echo '<div class="form-check">';
+                            echo '<input class="form-check-input yearSelection" id="year' . $i . '" type="radio" value="' . $i . '">';
+                            echo '<label class="form-check-label" for="year' . $i . '">' . $userDetails["years"][$i] . '</label>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                    } else {
+                        echo '<h4>' . $userDetails["years"][0] . '</h4>';
+                    }
+                    ?>
+                </div>
+
+                <div id="subSelect" style="display: none;" class="col-md-7"></div>
+
+            </div>
         </div>
+        <div id="uploadMessage" style="display: none;" class="alert alert-info mt-3"></div>
+        <div id="uploadSelectContainer" style="display: none;" class="my-3">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="uploadSelect">Select attendence Date</label>
+                    <select name="uploadSelect" id="uploadOptionSelect" class="uploadDate form-control">
+                        <option value="0" id="dummySelect">Select upload Date</option>
+                        <option value="1">Today</option>
+                        <option value="2">Select Date</option>
+                    </select>
+                </div>
+                <div id="uploadDateContainer" style="display: none;" class="form-group col-md-6">>
+                    <label for="uploadDate">Select Date</label>
+                    <input type="date" name="uploadDate" id="uploadDate" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div id="uploadFile" style="display: none;">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="input-group">
+                    <div class="col-md-6 custom-file">
+                        <input type="file" name="fileToupload" class="attendenceFile custom-file-input" accept=".csv,.xlsx,xls" multiple="false">
+                        <label class="custom-file-label" for="fileToupload">Upload Attendance File</label>
+                    </div>
+                    <div class=" col-md-2 input-group-append">
+                        <button type="submit" class="btn btn-primary" id="submitButton">Upload</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="responseMessage" class="malert alert-success mt-3"></div>
+        <div>
+            <button id="fullAttendence" style="display: none;margin : 10px;" class="btn btn-info">View attendence Log</button>
+        </div>
+        <div id="attendenceLog" class="mt-3"></div>
     </div>
-    <div id="uploadFile" style="display: none;">
-        <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" name="fileToupload" class="attendenceFile" accept=".csv,.xlsx,xls" multiple="false">
-            <input type="submit" value="upload" id="submitButton">
-        </form>
-    </div>
-    <div id="responseMessage"></div>
-    <div><button id="fullAttendence" style="display: none;margin : 10px;">View attendence Log</button></div>
-    <div id="attendenceLog"></div>
 </body>
 
 </html>

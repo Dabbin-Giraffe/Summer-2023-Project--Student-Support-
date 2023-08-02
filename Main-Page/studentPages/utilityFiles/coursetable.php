@@ -14,24 +14,26 @@ $id = $_SESSION["id"];
 
 <!-- Table Construction -->
 
-<table>
-    <tr>
-        <th>Subject Code</th>
-        <th>Subject Name</th>
-        <th>Classes Attended</th>
-        <th>Classes Conducted</th>
-        <th>Attendence Percentage</th>
-        <th>Required Percentage</th>
-        <th>Max Planned</th>
-    </tr>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Classes Attended</th>
+            <th>Classes Conducted</th>
+            <th>Attendence Percentage</th>
+            <th>Required Percentage</th>
+            <th>Max Planned</th>
+        </tr>
+    </thead>
     <?php
     if ($selectSub == -1) {
         for ($i = 0; $i < count($subjectName[$selectSem - 1]); $i++) {
-            generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub);
+            generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i, $selectSub);
         }
     } else {
         $i = $selectSub;
-        generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub);
+        generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i, $selectSub);
     }
     ?>
 </table>
@@ -39,7 +41,7 @@ $id = $_SESSION["id"];
 
 // Dynamically generates rows for table to display subjects
 
-function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i,$selectSub)
+function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRequired, $maxClasses, $id, $i, $selectSub)
 {
     $classesconducted = 0; //needed for attendence calculation and the class number column
     $attendence = 0;
@@ -67,14 +69,14 @@ function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRe
     $presentPercentage = round(($present / $classesconducted) * 100, 2);
 
 
-    echo "<tr>";
+    echo "<tr class='subjectLog' id='" . $subjectCode[$selectSem - 1][$i] . "'>";
     echo "<td>" . $subjectCode[$selectSem - 1][$i] . "</td>";
     //This is related to the "all" selector, adds classes and ids depeding on this "all" thing
     if ($selectSub != -1) {
         echo "<td>" . $subjectName[$selectSem - 1][$i] . "</td>";
     }
     if ($selectSub == -1) {
-        echo "<td><a href='javascript:void(0)' id='" . $subjectCode[$selectSem - 1][$i] . "' class='subjectLog'>" . $subjectName[$selectSem - 1][$i] . "</a></td>";
+        echo "<td>" . $subjectName[$selectSem - 1][$i] . "</td>";
     }
     echo "<td>" . $present . "</td>";
     echo "<td>" . $classesconducted . "</td>";
