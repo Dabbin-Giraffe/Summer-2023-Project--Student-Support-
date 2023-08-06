@@ -26,7 +26,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyUpload.js?v=2"></script>
+    <script src="facultyUpload.js?v=3"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=3">
 
 </head>
@@ -39,7 +39,6 @@ include "navbar.php"
     <div class="container mt-5">
         <div class="form-group">
             <div class="row">
-
                 <div class="col md-7">
                     <?php
                     if (count($userDetails["years"]) > 1) {
@@ -93,7 +92,7 @@ include "navbar.php"
                 </div>
             </form>
         </div>
-        <div id="responseMessage" class="malert alert-success mt-3"></div>
+        <div id="responseMessage" style="display: none;" class="alert alert-success mt-3"></div>
         <div>
             <button id="fullAttendence" style="display: none;margin : 10px;" class="btn btn-info">View attendence Log</button>
         </div>

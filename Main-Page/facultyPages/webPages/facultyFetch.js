@@ -26,7 +26,7 @@ function loadAttendenceLog(fetchDetails) {
             }
         },
         error: function () {
-            console.log("error js side in attendence log function");
+            console.log("error in attendence log function");
         }
     })
 
@@ -69,21 +69,25 @@ $(document).ready(function () {
         //Creating radio buttons
 
         let radioHtml = "";
+        radioHtml += "<select id='subSelectContainer' class = 'form-control'>"
+        radioHtml += "<option class = 'form-check-input subSelect' id = 'subSelectPlaceHolder' value = ''>Select Subject </option>"
         $.each(subjectRadio, function (index, option) {
-            radioHtml += "<div class='form-check'>";
-            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
-            radioHtml += "<label class = 'form-check-label' for = '" + option.id + "' >" + option.label + '</label>';
-            radioHtml += "</div>";
+            radioHtml += "<option class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
+            radioHtml += "" + option.label + '</option>';
         });
+        radioHtml += "</select>"
         $("#subSelect").append(radioHtml);
         $("#subSelect").show();
+
     }
 
     //deals with getting the selected subject
 
-    $(".subSelect").change(function () {
-        subSelect = $('.subSelect:checked').val();
-        // console.log(subSelect);
+    $("#subSelectContainer").change(function () {
+        subSelect = $(this).val();
+        $("#subSelectPlaceHolder").remove();
+        $("#attendenceFetchtable").empty();
+        $(".radioChanges").hide();
 
         //Deals with the search student thing 
 

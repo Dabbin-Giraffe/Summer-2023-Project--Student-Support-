@@ -20,7 +20,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyFetch.js?v=5"></script>
+    <script src="facultyFetch.js?v=2"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
     <style>
         .searchHidden {
@@ -36,19 +36,24 @@ include "navbar.php"
 
 <body>
     <div class="container mt-5">
-        <?php
-        if (count($userDetails["years"]) > 1) {
-            for ($i = 0; $i < count($userDetails["years"]); $i++) {
+        <div class="form-group">
+            <div class="row">
+                <div class="col md-7">
+                    <?php
+                    if (count($userDetails["years"]) > 1) {
+                        for ($i = 0; $i < count($userDetails["years"]); $i++) {
 
-                echo "<input class = 'yearSelection' id = '" . $i . "' type = 'radio' value = '" . $i . "'>";
-                echo "<label for = '" . $userDetails["years"][$i] . "'>" . $userDetails["years"][$i] . "</label>";
-            }
-        } else {
-            echo "<h4>" . $userDetails["years"][0] . "</h4>";
-        }
-        ?>
-        <div id="subSelect" style="display: none;">
-            <b>Choose a subject : </b>
+                            echo "<input class = 'yearSelection' id = '" . $i . "' type = 'radio' value = '" . $i . "'>";
+                            echo "<label for = '" . $userDetails["years"][$i] . "'>" . $userDetails["years"][$i] . "</label>";
+                        }
+                    } else {
+                        echo "<h4>" . $userDetails["years"][0] . "</h4>";
+                    }
+                    ?>
+                </div>
+                <div id="subSelect" style="display: none;" class="col-md-7">
+                </div>
+            </div>
         </div>
         <div id="search" class="searchHidden">
             <div class="input-group mb-3">
@@ -59,6 +64,8 @@ include "navbar.php"
             </div>
             <button id="saveChanges" class="btn btn-success radioChanges" style="display: none;">Submit Changes</button>
             <small class="text-danger radioChanges" style="color : red;display : none">*If changes are not submitted, the data won't be updated</small>
+        </div>
+        <div id="studentDetailsContainer" class="alert alert-secondary mt-3">
         </div>
         <div id="attendenceFetchtable"></div>
     </div>
