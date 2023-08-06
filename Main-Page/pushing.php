@@ -161,7 +161,79 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 
 // uploadData($conn,$defaultAttendence,$changedAttendence);
 
-$stmt = "INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES ('SE21UCSE198','2022-01-16',1,'EC1101',1,1)";
-if($conn->query($stmt)){
-    echo "suc";
+// $stmt = "INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES ('SE21UCSE198','2022-01-16',1,'EC1101',1,1)";
+// if($conn->query($stmt)){
+//     echo "suc";
+// }
+
+
+$result = fetchAttendenceDetails("CS1201","SE21UCSE198",$conn);
+print_r($result);
+
+
+function fetchAttendenceDetails($subjectID, $studentID, $conn)
+{
+
+    $id = 0;
+    $date = "";
+    $attendence = 0;
+    $classesConducted = 0;
+    $present = 0;
+
+    $stmt = $conn->prepare("SELECT id,date,attendence FROM attendence WHERE subjectID = ? AND studentID = ? ORDER BY date DESC");
+    $stmt->bind_param("ss", $subjectID, $studentID);
+    $stmt->execute();
+    $stmt->bind_result($id, $date, $attendence);
+
+    $attendenceDetails = [];
+    while ($stmt->fetch()) {
+        $classesConducted++;
+        if ($attendence == 1) {
+            $present++;
+        }
+        $attendenceDetails[] = [
+            'id' => $id,
+            'date' => $date,
+            'attendence' => $attendence
+        ];
+    }
+    $stmt->close();
+
+    $studentDetails = fetchStudentDetails($conn, $studentID);
+
+    $result = [
+        "attendenceDetails" => $attendenceDetails,
+        "studentDetails" => $studentDetails
+    ];
+
+    return $result;
+}
+
+function fetchStudentDetails($conn, $studentID)
+{
+
+    $firstName = "";
+    $lastName = "";
+    $year = 0;
+    $flag = 0;
+
+    $stmt = $conn->prepare("SELECT firstName, lastName, flag FROM user WHERE userID = ?");
+    $stmt->bind_param("s", $studentID);
+    $stmt->execute();
+    $stmt->bind_result($firstName, $lastName, $flag);
+    $stmt->fetch();
+    $stmt->close();
+
+    $stmt = $conn->prepare("SELECT role FROM flag WHERE flag = ?");
+    $stmt->bind_param("i", $flag);
+    $stmt->execute();
+    $stmt->bind_result($year);
+    $stmt->fetch();
+    $stmt->close();
+
+    $studentDetails = [
+        "studentName" => $firstName . " " . $lastName,
+        "year" => $year
+    ];
+    return $studentDetails;
 }
