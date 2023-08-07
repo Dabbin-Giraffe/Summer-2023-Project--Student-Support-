@@ -20,7 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         "success" => true,
         "message" => "lol",
         "table" => $resultData["html"],
-        "result" => $resultData["result"]
+        "result" => $resultData["result"],
+        "studentName" => $resultData["studentName"],
+        "studentYear" => $resultData["studentYear"]
     ];
 
     header("Content-Type: application/json");
@@ -30,36 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
 function constructTableAttendenceEdit($conn, $subjectID, $studentID)
 {
-
     $html = "";
-
-    // $attendence = 0;
-    // $date = 0;
-    // $id = 0;
-    // $classesConducted = 0;
-    // $present = 0;
-
-    // $stmt = $conn->prepare("SELECT id,date,attendence FROM attendence WHERE subjectID = ? AND studentID = ? ORDER BY date DESC");
-    // $stmt->bind_param("ss", $subjectID, $studentID);
-    // $stmt->execute();
-    // $stmt->bind_result($id, $date, $attendence);
-
-    // $result = [];
-    // while ($stmt->fetch()) {
-    //     $classesConducted++;
-    //     if ($attendence == 1) {
-    //         $present++;
-    //     }
-    //     $result[] = [
-    //         'id' => $id,
-    //         'date' => $date,
-    //         'attendence' => $attendence
-    //     ];
-    // }
-    // $stmt->close();
 
     $details = fetchAttendenceDetails($subjectID, $studentID, $conn);
     $result = $details["attendenceDetails"];
+    $studentDetails = $details["studentDetails"];
 
     $html .= "<table class = 'table table-bordered'>
     <thead>
@@ -94,11 +71,12 @@ function constructTableAttendenceEdit($conn, $subjectID, $studentID)
     $html .= "</tbody></table>";
     $data = [
         "html" => $html,
-        "result" => $result
+        "result" => $result,
+        "studentName" => $studentDetails["studentName"],
+        "studentYear" => $studentDetails["year"]
     ];
     return $data;
 }
-
 
 function fetchAttendenceDetails($subjectID, $studentID, $conn)
 {

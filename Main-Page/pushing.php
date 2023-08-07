@@ -167,73 +167,112 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 // }
 
 
-$result = fetchAttendenceDetails("CS1201","SE21UCSE198",$conn);
-print_r($result);
+// $result = fetchAttendenceDetails("CS1201","SE21UCSE198",$conn);
+// print_r($result);
 
 
-function fetchAttendenceDetails($subjectID, $studentID, $conn)
+// function fetchAttendenceDetails($subjectID, $studentID, $conn)
+// {
+
+//     $id = 0;
+//     $date = "";
+//     $attendence = 0;
+//     $classesConducted = 0;
+//     $present = 0;
+
+//     $stmt = $conn->prepare("SELECT id,date,attendence FROM attendence WHERE subjectID = ? AND studentID = ? ORDER BY date DESC");
+//     $stmt->bind_param("ss", $subjectID, $studentID);
+//     $stmt->execute();
+//     $stmt->bind_result($id, $date, $attendence);
+
+//     $attendenceDetails = [];
+//     while ($stmt->fetch()) {
+//         $classesConducted++;
+//         if ($attendence == 1) {
+//             $present++;
+//         }
+//         $attendenceDetails[] = [
+//             'id' => $id,
+//             'date' => $date,
+//             'attendence' => $attendence
+//         ];
+//     }
+//     $stmt->close();
+
+//     $studentDetails = fetchStudentDetails($conn, $studentID);
+
+//     $result = [
+//         "attendenceDetails" => $attendenceDetails,
+//         "studentDetails" => $studentDetails
+//     ];
+
+//     return $result;
+// }
+
+// function fetchStudentDetails($conn, $studentID)
+// {
+
+//     $firstName = "";
+//     $lastName = "";
+//     $year = 0;
+//     $flag = 0;
+
+//     $stmt = $conn->prepare("SELECT firstName, lastName, flag FROM user WHERE userID = ?");
+//     $stmt->bind_param("s", $studentID);
+//     $stmt->execute();
+//     $stmt->bind_result($firstName, $lastName, $flag);
+//     $stmt->fetch();
+//     $stmt->close();
+
+//     $stmt = $conn->prepare("SELECT role FROM flag WHERE flag = ?");
+//     $stmt->bind_param("i", $flag);
+//     $stmt->execute();
+//     $stmt->bind_result($year);
+//     $stmt->fetch();
+//     $stmt->close();
+
+//     $studentDetails = [
+//         "studentName" => $firstName . " " . $lastName,
+//         "year" => $year
+//     ];
+//     return $studentDetails;
+// }
+
+// $dates = editDatesFetch($conn,"CS1201",1);
+// print_r( $dates);
+
+// function editDatesFetch($conn, $subjectCode, $flag)
+// {
+//     $minDate = "";
+//     $maxDate = "";
+//     $stmt = $conn->prepare("SELECT MIN(date) as minDate, MAX(date) as maxDate FROM attendence WHERE subjectID = ? AND flag = ?");
+//     $stmt->bind_param("si", $subjectCode, $flag);
+//     $stmt->execute();
+//     $stmt->bind_result($minDate, $maxDate);
+//     $stmt->fetch();
+//     $stmt->close();
+
+//     $dates = [
+//         "minDate" => $minDate,
+//         "maxDate" => $maxDate
+//     ];
+
+//     return $dates;
+// }
+
+$count = checkDates($conn,"CS1201","2023-03-08",1);
+echo $count;
+
+function checkDates($conn, $subjectCode, $selectDate, $flag)
 {
-
-    $id = 0;
-    $date = "";
-    $attendence = 0;
-    $classesConducted = 0;
-    $present = 0;
-
-    $stmt = $conn->prepare("SELECT id,date,attendence FROM attendence WHERE subjectID = ? AND studentID = ? ORDER BY date DESC");
-    $stmt->bind_param("ss", $subjectID, $studentID);
+    $count = 0;
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE subjectID = ? AND date = ? AND flag = ?");
+    $stmt->bind_param("ssi", $subjectCode, $selectDate, $flag);
     $stmt->execute();
-    $stmt->bind_result($id, $date, $attendence);
-
-    $attendenceDetails = [];
-    while ($stmt->fetch()) {
-        $classesConducted++;
-        if ($attendence == 1) {
-            $present++;
-        }
-        $attendenceDetails[] = [
-            'id' => $id,
-            'date' => $date,
-            'attendence' => $attendence
-        ];
-    }
-    $stmt->close();
-
-    $studentDetails = fetchStudentDetails($conn, $studentID);
-
-    $result = [
-        "attendenceDetails" => $attendenceDetails,
-        "studentDetails" => $studentDetails
-    ];
-
-    return $result;
-}
-
-function fetchStudentDetails($conn, $studentID)
-{
-
-    $firstName = "";
-    $lastName = "";
-    $year = 0;
-    $flag = 0;
-
-    $stmt = $conn->prepare("SELECT firstName, lastName, flag FROM user WHERE userID = ?");
-    $stmt->bind_param("s", $studentID);
-    $stmt->execute();
-    $stmt->bind_result($firstName, $lastName, $flag);
+    $stmt->bind_result($count);
     $stmt->fetch();
     $stmt->close();
 
-    $stmt = $conn->prepare("SELECT role FROM flag WHERE flag = ?");
-    $stmt->bind_param("i", $flag);
-    $stmt->execute();
-    $stmt->bind_result($year);
-    $stmt->fetch();
-    $stmt->close();
-
-    $studentDetails = [
-        "studentName" => $firstName . " " . $lastName,
-        "year" => $year
-    ];
-    return $studentDetails;
+    return $count;
 }
+

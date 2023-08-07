@@ -22,6 +22,15 @@ function loadAttendenceLog(fetchDetails) {
                 let attendenceTable = response.table;
                 $("#attendenceFetchtable").html(attendenceTable);
                 $(".radioChanges").show();
+
+                let studentName = response["studentName"];
+                let studentYear = response["studentYear"];
+
+                let html = "Student Name : " + studentName + "    Year : " + studentYear;
+                $("#studentDetailsContainer").html(html);
+                $("#studentDetailsContainer").show();
+
+                console.log(studentDetails);
                 return response.result;
             }
         },
@@ -64,7 +73,6 @@ $(document).ready(function () {
                 "value": i
             }
         }
-        // console.log(subjectRadio);
 
         //Creating radio buttons
 

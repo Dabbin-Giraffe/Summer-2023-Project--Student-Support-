@@ -10,6 +10,7 @@ $faculty = new Faculty($email, $conn);
 $userDetails = $faculty->getUserdetails();
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,15 +21,10 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyFetch.js?v=5"></script>
+    <script src="editAttendence.js?v=4"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
-    <style>
-        .searchHidden {
-            display: none;
-        }
-    </style>
-    <title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Document</title>
 </head>
 <?php
 include "navbar.php"
@@ -55,20 +51,20 @@ include "navbar.php"
                 </div>
             </div>
         </div>
-        <div id="search" class="searchHidden">
-            <div class="input-group mb-3">
-                <input type="text" name="studentSearch" class="form-control" placeholder="Search students" id="studentSearch">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" id="studentSearchButton">Search</button>
+        <div id="uploadSelectContainer" class="my-3">
+            <div class="form-row">
+                <div id="uploadDateContainer" class="form-group col-md-6" style="display: none;">
+                    <label for="uploadDate">Select Date</label>
+                    <input type="date" name="uploadDate" id="uploadDate" class="form-control">
+                </div>
+                <div id="uploadfileContainer" class="form-group col-md-6" style="display: none;">
+                    <input type="file" name="fileToupload" class="attendenceFile custom-file-input form-control" accept=".csv,.xlsx,xls" multiple="false">
+                    <label class="custom-file-label" for="fileToupload">Upload Attendance File</label>
                 </div>
             </div>
-            <button id="saveChanges" class="btn btn-success radioChanges" style="display: none;">Submit Changes</button>
-            <small class="text-danger radioChanges" style="color : red;display : none">*If changes are not submitted, the data won't be updated</small>
         </div>
-        <div id="studentDetailsContainer" class="alert alert-secondary mt-3" style="display: none;">
-        </div>
-        <div id="attendenceFetchtable"></div>
+        <div id="detailsContainer" class="alert alert-secondary mt-3" style="display : none;"></div>
     </div>
 </body>
 
-</html
+</html>

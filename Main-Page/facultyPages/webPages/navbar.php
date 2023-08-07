@@ -6,7 +6,7 @@
                 <a href="#">Edit attendence ▾</a>
                 <ul class="dropdown">
                     <li><a href="facultyFetchPage.php">Fetch Details</a></li>
-                    <!-- <li><a href="editAttendencePage.php">Edit attendance</a></li> -->
+                    <li><a href="editAttendencePage.php">Edit attendance</a></li>
                 </ul>
             </li>
             <li class="logout"><a href="../../loginPages/logout.php">Logout</a></li>
