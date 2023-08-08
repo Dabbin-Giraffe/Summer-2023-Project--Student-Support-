@@ -9,7 +9,7 @@ $(document).ready(function () {
     let defaultAttendence = [];
     let changedAttendence = [];
 
-
+    
     // Year selection part
 
     let yearSelectIndex;
@@ -46,6 +46,9 @@ $(document).ready(function () {
         $("#subSelect").show();
 
         $("#subSelectContainer").change(function () {
+            $("#uploadDate").val("");
+            $("#dateAlert").hide();
+            $("#uploadFileContainer").hide();
             subSelect = $(this).val();
             $("#subSelectPlaceHolder").remove();
             $("#attendenceFetchtable").empty();
@@ -102,6 +105,17 @@ $(document).ready(function () {
                             if (response.success) {
                                 let count = response.count;
                                 console.log(count);
+                                if (!count) {
+                                    $("#uploadFileContainer").hide();
+                                    $("#dateAlert").show();
+                                } else {
+                                    $("#dateAlert").hide();
+                                    $('#fileInput').change(function () {
+                                        var fileName = $(this).val().split('\\').pop();
+                                        $('#fileLabel').html(fileName);
+                                    });
+                                    $("#uploadFileContainer").show();
+                                }
                             }
                         },
                         error: function (xhr, status, error) {
@@ -111,6 +125,16 @@ $(document).ready(function () {
                 }
             })
 
+        })
+
+        $("#uploadForm").submit(function (e) {
+            var fileInput = $('#fileInput');
+            if (fileInput[0].files.length === 0) {
+                e.preventDefault();
+                alert('Please select a file before submitting.');
+            } else {
+                
+            }
         })
     }
 })

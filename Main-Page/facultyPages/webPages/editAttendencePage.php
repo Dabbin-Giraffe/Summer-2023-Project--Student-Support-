@@ -21,7 +21,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="editAttendence.js?v=4"></script>
+    <script src="editAttendence.js?v=3"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Document</title>
@@ -32,6 +32,8 @@ include "navbar.php"
 
 <body>
     <div class="container mt-5">
+        <div class="alert alert-warning">
+            This updates existing student data based on IDs in the Excel sheet and uploads new data. Existing data remains unchanged. </div>
         <div class="form-group">
             <div class="row">
                 <div class="col md-7">
@@ -56,10 +58,17 @@ include "navbar.php"
                 <div id="uploadDateContainer" class="form-group col-md-6" style="display: none;">
                     <label for="uploadDate">Select Date</label>
                     <input type="date" name="uploadDate" id="uploadDate" class="form-control">
+                    <p class="small" id="dateAlert" style="display : none;color: red;">There isn't a class matching this date please check</p>
                 </div>
-                <div id="uploadfileContainer" class="form-group col-md-6" style="display: none;">
-                    <input type="file" name="fileToupload" class="attendenceFile custom-file-input form-control" accept=".csv,.xlsx,xls" multiple="false">
-                    <label class="custom-file-label" for="fileToupload">Upload Attendance File</label>
+                <div id="uploadFileContainer" class="form-group col-md-6" style="display: none;">
+                    <form id="uploadForm" enctype="multipart/form-data">
+
+                        <div class="custom-file">
+                            <input id="fileInput" style="margin-top: 33px;" type="file" name="fileToupload" class="attendenceFile custom-file-input form-control" accept=".csv,.xlsx,xls" multiple="false">
+                            <label style="margin-top: 33px;" class="custom-file-label" id="fileLabel" for="fileToupload">Choose file...</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submitButton" style="margin-top: 15px;margin-left : 2px">Upload</button>
+                    </form>
                 </div>
             </div>
         </div>
