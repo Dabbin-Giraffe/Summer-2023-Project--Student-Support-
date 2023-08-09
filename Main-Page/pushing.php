@@ -309,3 +309,150 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 //     }
 //     $stmt->close();
 // }
+
+
+
+// $studentFetchID = [];
+// $id = "";
+// $date = "2022-10-06";
+// $flag = 1;
+// $subjectCode = "MA1201";
+// $stmt = $conn->prepare("SELECT studentID FROM attendence WHERE date = ? and subjectID = ? and flag = ?");
+// $stmt->bind_param("ssi", $date, $subjectCode, $flag);
+// $stmt->execute();
+// $stmt->bind_result($id);
+// while ($stmt->fetch()) {
+//     $studentFetchID[] = $id;
+// }
+// $stmt->close();
+
+// print_r($studentFetchID);
+
+$studentID = ["SE21UCSE198", "SE21UCSE070"];
+$studentName = ["abc", "lorem"];
+$flag = 1;
+$subjectCode = "CS1201";
+$date = "2022-10-05";
+$attendence = [1, 1];
+
+// $finalResult =  fetchDetails($conn, $studentID, $date, $subjectCode, $flag, $attendence, $studentName);
+
+// function fetchDetails($conn, $studentID, $date, $subjectCode, $flag, $attendence, $studentName)
+// {
+//     $studentFetchID = [];
+//     $id = "";
+//     $stmt = $conn->prepare("SELECT studentID FROM attendence WHERE date = ? and subjectID = ? and flag = ?");
+//     $stmt->bind_param("ssi", $date, $subjectCode, $flag);
+//     $stmt->execute();
+//     $stmt->bind_result($id);
+//     while ($stmt->fetch()) {
+//         $studentFetchID[] = $id;
+//     }
+//     $stmt->close();
+
+//     // editVals is array of elements that are already present in the table
+//     // newIDS are elemnts that are not present in the table and need to be added
+
+//     $editAttendence = [];
+//     $editNames = [];
+//     $newIDs = array_diff($studentID, $studentFetchID);
+//     $editIDs = array_diff($studentID, $newIDs);
+
+//     if (count($newIDs) > 0) {
+
+//         $uploadID = [];
+//         $uploadNames = [];
+//         $uploadAttendence = [];
+
+//         foreach ($newIDs as $key => $value) {
+//             $uploadID[] = $studentID[$key];
+//             $uploadNames[] = $studentName[$key];
+//             $uploadAttendence[] = $attendence[$key];
+//         }
+//         echo "count(newids) " . count($newIDs);
+//         $uploadResult = newUpload($conn, $uploadID, $uploadAttendence, $date, $subjectCode, $flag);
+//     } else {
+//         $uploadResult = false;
+//     }
+
+//     if (count($editIDs) > 0) {
+//         $editID = [];
+//         $editNames = [];
+//         $editAttendence = [];
+//         foreach ($editIDs as $key => $value) {
+//             $editID[] = $studentID[$key];
+//             $editNames[] = $studentName[$key];
+//             $editAttendence[] = $attendence[$key];
+//         }
+//         echo "count(editID) ".count($editID);
+//         $editResult = editUpload($conn, $editID, $editAttendence, $date, $subjectCode, $flag);
+//     } else {
+//         $editResult = false;
+//     }
+
+//     // echo "upload";
+//     // print_r($uploadID);
+//     // echo "\n edit";
+//     // print_r($editIDs);
+
+
+//     if ($editResult) {
+//         $editedVals = [
+//             "editAttendence" => $editAttendence,
+//             "editNames" => $editNames,
+//             "editID" => $editID,
+//         ];
+//     } else {
+//         $editedVals = null;
+//     }
+//     if ($uploadResult) {
+//         $uploadVals = [
+//             "uploadAttendence" => $uploadAttendence,
+//             "uploadNames" => $uploadNames,
+//             "uploadID" => $uploadID
+//         ];
+//     } else {
+//         $uploadVals = null;
+//     }
+//     echo "<br>edit Result ";
+//     print_r(count($editAttendence));
+//     echo "<br>upload Result ";
+//     print_r($uploadVals);
+//     $finalResult = [
+//         "editVals" => $editedVals,
+//         "uploadVals" => $uploadVals
+//     ];
+
+//     return $finalResult;
+// }
+
+// function editUpload($conn, $editIDs, $editAttendence, $date, $subjectID, $flag)
+// {
+//     foreach ($editIDs as $key => $ID) {
+//         $stmt = $conn->prepare("UPDATE attendence SET attendence = ? WHERE studentID = ? AND flag = ? AND date = ? AND subjectID = ?");
+//         $stmt->bind_param("isiss", $editAttendence[$key], $ID, $flag, $date, $subjectID);
+//         $stmt->execute();
+//         $stmt->close();
+//     }
+//     return true;
+// }
+
+// function newUpload($conn, $newIDs, $newAttendence, $date, $subjectID, $flag)
+// {
+//     $semester = 0;
+
+//     $stmt = $conn->prepare("SELECT semester FROM subject WHERE subjectCode = ?");
+//     $stmt->bind_param("s", $subjectID);
+//     $stmt->execute();
+//     $stmt->bind_result($semester);
+//     $stmt->fetch();
+//     $stmt->close();
+
+//     foreach ($newIDs as $index => $ID) {
+//         $stmt = $conn->prepare("INSERT INTO attendence (studentID,date,attendence,subjectID,semester,flag) VALUES (?,?,?,?,?,?)");
+//         $stmt->bind_param("ssisii", $ID, $date, $newAttendence[$index], $subjectID, $semester, $flag);
+//         $stmt->execute();
+//         $stmt->close();
+//     }
+//     return true;
+// }

@@ -21,7 +21,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="editAttendence.js?v=4"></script>
+    <script src="editAttendence.js?v=6"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Document</title>

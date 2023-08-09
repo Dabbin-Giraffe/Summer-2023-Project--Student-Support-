@@ -37,12 +37,17 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
                 fclose($handle);
             }
 
-            $finalResult = fetchDetails($conn, $studentID, $date, $subjectID, $flag, $attendence, $studentName);
+            $finalResult =  fetchDetails($conn, $studentID, $date, $subjectID, $flag, $attendence, $studentName);
+
+            // $response = [
+            //     "success" => true,
+            //     "message" => "[" . $date . "] : successfully uploaded attendence data of " . count($editedVals["editAttendence"]) . " students for " . $subjectName . "(" . $subjectID . ")",
+            //     "finalResult" => $finalResult
+            // ];
 
             $response = [
                 "success" => true,
-                "message" => "[" . $date . "] : successfully uploaded attendence data of " . count($editedVals["editAttendence"]) . " students for " . $subjectName . "(" . $subjectID . ")",
-                "finalResult" => $finalResult
+                "finalResult" =>"suc"
             ];
 
             header('Content-Type: application/json');
@@ -65,30 +70,18 @@ function fetchDetails($conn, $studentID, $date, $subjectCode, $flag, $attendence
     }
     $stmt->close();
 
-    // editVals is array of elements that are already present in the table
-    // newIDS are elemnts that are not present in the table and need to be added
-
     $editAttendence = [];
     $editNames = [];
-
     $newIDs = array_diff($studentID, $studentFetchID);
-    $editIDs = $studentID;
-    $editIDs = array_values($newIDs);
+    $editIDs = array_diff($studentID, $newIDs);
 
-    foreach ($newIDs as $key => $value) {
-        $editAttendence[] = $attendence[$key];
-        $editNames[] = $studentName[$key];
-    }
-
-    $diffID = array_diff($studentID, $editIDs);
-
-    if (count($diffID) > 0) {
+    if (count($newIDs) > 0) {
 
         $uploadID = [];
         $uploadNames = [];
         $uploadAttendence = [];
 
-        foreach ($diffID as $key => $value) {
+        foreach ($newIDs as $key => $value) {
             $uploadID[] = $studentID[$key];
             $uploadNames[] = $studentName[$key];
             $uploadAttendence[] = $attendence[$key];
@@ -97,14 +90,29 @@ function fetchDetails($conn, $studentID, $date, $subjectCode, $flag, $attendence
     } else {
         $uploadResult = false;
     }
-    $editResult = editUpload($conn, $editIDs, $editAttendence, $date, $subjectCode, $flag);
+
+    if (count($editIDs) > 0) {
+        $editID = [];
+        $editNames = [];
+        $editAttendence = [];
+        foreach ($editIDs as $key => $value) {
+            $editID[] = $studentID[$key];
+            $editNames[] = $studentName[$key];
+            $editAttendence[] = $attendence[$key];
+        }
+        $editResult = editUpload($conn, $editID, $editAttendence, $date, $subjectCode, $flag);
+    } else {
+        $editResult = false;
+    }
 
     if ($editResult) {
         $editedVals = [
             "editAttendence" => $editAttendence,
             "editNames" => $editNames,
-            "editID" => $editIDs,
+            "editID" => $editID,
         ];
+    } else {
+        $editedVals = null;
     }
     if ($uploadResult) {
         $uploadVals = [
@@ -113,8 +121,9 @@ function fetchDetails($conn, $studentID, $date, $subjectCode, $flag, $attendence
             "uploadID" => $uploadID
         ];
     } else {
-        $uploadVals = $uploadResult;
+        $uploadVals = null;
     }
+
     $finalResult = [
         "editVals" => $editedVals,
         "uploadVals" => $uploadVals

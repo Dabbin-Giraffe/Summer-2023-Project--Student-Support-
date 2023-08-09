@@ -133,7 +133,7 @@ $(document).ready(function () {
             e.preventDefault();
 
             $("#submitButton").prop("disabled", true);
-            $("#uploadDate").val("");
+            $("#uploadDate").val("0");
 
             let formData = new FormData(this);
             formData.append("selectDate", selectDate);
@@ -141,7 +141,7 @@ $(document).ready(function () {
             formData.append("flag", userDetails["flags"][yearSelectIndex]);
             formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect]);
             formData.append("userID", userDetails["id"]);
-            console.log("breh");
+            console.log(formData);
 
             $.ajax({
                 url: "../utilityFiles/editUpload.php",
@@ -152,11 +152,11 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     if (response.success) {
-                        
+                        console.log("heya");
                     }
                 },
-                error: function () {
-                    console.log("error js side?");
+                error: function (xhr, status, error) {
+                    console.log("AJAX Error: " + error);
                 }
             })
 
