@@ -5,11 +5,12 @@ $(document).ready(function () {
 
     let studentID;
     let subSelect;
+    let selectDate;
     let attendenceTable;
     let defaultAttendence = [];
     let changedAttendence = [];
 
-    
+
     // Year selection part
 
     let yearSelectIndex;
@@ -84,7 +85,7 @@ $(document).ready(function () {
             })
 
             $("#uploadDate").change(function () {
-                let selectDate = $(this).val();
+                selectDate = $(this).val();
 
                 if (selectDate) {
                     let dateDetails = {
@@ -128,13 +129,37 @@ $(document).ready(function () {
         })
 
         $("#uploadForm").submit(function (e) {
-            var fileInput = $('#fileInput');
-            if (fileInput[0].files.length === 0) {
-                e.preventDefault();
-                alert('Please select a file before submitting.');
-            } else {
-                
-            }
+
+            e.preventDefault();
+
+            $("#submitButton").prop("disabled", true);
+            $("#uploadDate").val("");
+
+            let formData = new FormData(this);
+            formData.append("selectDate", selectDate);
+            formData.append("subjectCode", userDetails["subjectCode"][yearSelectIndex][subSelect]);
+            formData.append("flag", userDetails["flags"][yearSelectIndex]);
+            formData.append("subjectName", userDetails["subjectName"][yearSelectIndex][subSelect]);
+            formData.append("userID", userDetails["id"]);
+            console.log("breh");
+
+            $.ajax({
+                url: "../utilityFiles/editUpload.php",
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        
+                    }
+                },
+                error: function () {
+                    console.log("error js side?");
+                }
+            })
+
         })
     }
 })

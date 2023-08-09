@@ -260,19 +260,52 @@ $semester_arr = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 //     return $dates;
 // }
 
-$count = checkDates($conn,"CS1201","2023-03-08",1);
-echo $count;
+// $count = checkDates($conn,"CS1201","2023-03-08",1);
+// echo $count;
 
-function checkDates($conn, $subjectCode, $selectDate, $flag)
-{
-    $count = 0;
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE subjectID = ? AND date = ? AND flag = ?");
-    $stmt->bind_param("ssi", $subjectCode, $selectDate, $flag);
-    $stmt->execute();
-    $stmt->bind_result($count);
-    $stmt->fetch();
-    $stmt->close();
+// function checkDates($conn, $subjectCode, $selectDate, $flag)
+// {
+//     $count = 0;
+//     $stmt = $conn->prepare("SELECT COUNT(*) FROM attendence WHERE subjectID = ? AND date = ? AND flag = ?");
+//     $stmt->bind_param("ssi", $subjectCode, $selectDate, $flag);
+//     $stmt->execute();
+//     $stmt->bind_result($count);
+//     $stmt->fetch();
+//     $stmt->close();
 
-    return $count;
-}
+//     return $count;
+// }
 
+// $arr1 = ["SE21UCSE198","SE21UCSE179"];
+// $arr2 = ["SE21UCSE198"];
+
+// $potato = [1,2];
+// $newPotato = [];
+// $change = array_diff($arr1,$arr2);
+// $changed = $arr1;
+// $changed = array_values($change);
+
+// foreach ($change as $key => $value) {
+//     $newPotato[] = $change[$key];
+// }
+
+// print_r($change);
+// print_r($newPotato);
+// print_r($changed);
+
+// $editAttendence = [1,0];
+// $editIDs = ["SE21UCSE198","SE21UCSE197"];
+// $flag = 1;
+// $subjectID = "MA1201";
+// $date = "2022-10-03";
+
+
+// foreach ($editIDs as $key => $ID) {
+//     $stmt = $conn->prepare("UPDATE attendence SET attendence = ? WHERE studentID = ? AND flag = ? AND date = ? AND subjectID = ?");
+//     $stmt->bind_param("isiss", $editAttendence[$key], $ID, $flag, $date, $subjectID);
+
+//     if ($stmt->execute()) {
+//         echo "suc\n";
+//     }
+//     $stmt->close();
+// }

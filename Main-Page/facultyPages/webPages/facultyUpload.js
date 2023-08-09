@@ -138,7 +138,7 @@ $(document).ready(function () {
 
         //Deals with file Upload AJAX
         $("#uploadForm").submit(function (e) {
-            e.preventDefault();
+            e.prevenDefault();
             $("#submitButton").prop("disabled", true);
             $("#uploadDate").val("0");
 
@@ -162,13 +162,11 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     if (response.success) {
-                        let html  = "";
-                        html += "<strong>"+response.message+"</strong>";
+                        let html = "";
+                        html += "<strong>" + response.message + "</strong>";
                         $("#responseMessage").html(html)
                         $("#responseMessage").show();
                         $("#fullAttendence").show();
-                    } else {
-                        $("#responseMessage").text("error php sidee");
                     }
                 },
                 error: function () {
@@ -188,6 +186,7 @@ $(document).ready(function () {
 
                 $("#attendenceLog").load("../utilityFiles/facultyAttendencelog.php", attendenceLog);
             })
+
         })
     }
 })

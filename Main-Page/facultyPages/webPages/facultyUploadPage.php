@@ -83,7 +83,7 @@ include "navbar.php"
             <form id="uploadForm" enctype="multipart/form-data">
                 <div class="input-group">
                     <div class="col-md-6 custom-file">
-                        <input type="file" name="fileToupload" class="attendenceFile custom-file-input" accept=".csv,.xlsx,xls" multiple="false">
+                        <input type="file" id="fileInput" name="fileToupload" class="attendenceFile custom-file-input" accept=".csv,.xlsx,xls" multiple="false">
                         <label class="custom-file-label" for="fileToupload">Upload Attendance File</label>
                     </div>
                     <div class=" col-md-2 input-group-append">

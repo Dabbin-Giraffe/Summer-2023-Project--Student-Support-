@@ -21,7 +21,7 @@ $userDetails = $faculty->getUserdetails();
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="editAttendence.js?v=3"></script>
+    <script src="editAttendence.js?v=4"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Document</title>
@@ -61,8 +61,7 @@ include "navbar.php"
                     <p class="small" id="dateAlert" style="display : none;color: red;">There isn't a class matching this date please check</p>
                 </div>
                 <div id="uploadFileContainer" class="form-group col-md-6" style="display: none;">
-                    <form id="uploadForm" enctype="multipart/form-data">
-
+                    <form id="uploadForm" enctype="multipart/form-data" method="POST">
                         <div class="custom-file">
                             <input id="fileInput" style="margin-top: 33px;" type="file" name="fileToupload" class="attendenceFile custom-file-input form-control" accept=".csv,.xlsx,xls" multiple="false">
                             <label style="margin-top: 33px;" class="custom-file-label" id="fileLabel" for="fileToupload">Choose file...</label>
