@@ -22,11 +22,20 @@ function loadAttendenceLog(fetchDetails) {
                 let attendenceTable = response.table;
                 $("#attendenceFetchtable").html(attendenceTable);
                 $(".radioChanges").show();
+
+                let studentName = response["studentName"];
+                let studentYear = response["studentYear"];
+
+                let html = "Student Name : " + studentName + "    Year : " + studentYear;
+                $("#studentDetailsContainer").html(html);
+                $("#studentDetailsContainer").show();
+
+                console.log(studentDetails);
                 return response.result;
             }
         },
         error: function () {
-            console.log("error js side in attendence log function");
+            console.log("error in attendence log function");
         }
     })
 
@@ -64,26 +73,29 @@ $(document).ready(function () {
                 "value": i
             }
         }
-        // console.log(subjectRadio);
 
         //Creating radio buttons
 
         let radioHtml = "";
+        radioHtml += "<select id='subSelectContainer' class = 'form-control'>"
+        radioHtml += "<option class = 'form-check-input subSelect' id = 'subSelectPlaceHolder' value = ''>Select Subject </option>"
         $.each(subjectRadio, function (index, option) {
-            radioHtml += "<div class='form-check'>";
-            radioHtml += "<input name = 'subSelect' type = 'radio' class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
-            radioHtml += "<label class = 'form-check-label' for = '" + option.id + "' >" + option.label + '</label>';
-            radioHtml += "</div>";
+            radioHtml += "<option class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
+            radioHtml += "" + option.label + '</option>';
         });
+        radioHtml += "</select>"
         $("#subSelect").append(radioHtml);
         $("#subSelect").show();
+
     }
 
     //deals with getting the selected subject
 
-    $(".subSelect").change(function () {
-        subSelect = $('.subSelect:checked').val();
-        // console.log(subSelect);
+    $("#subSelectContainer").change(function () {
+        subSelect = $(this).val();
+        $("#subSelectPlaceHolder").remove();
+        $("#attendenceFetchtable").empty();
+        $(".radioChanges").hide();
 
         //Deals with the search student thing 
 

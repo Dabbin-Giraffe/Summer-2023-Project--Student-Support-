@@ -35,6 +35,7 @@ $(document).ready(function () {
 
         let radioHtml = "";
         radioHtml += "<select id='subSelectContainer' class = 'form-control'>"
+        radioHtml += "<option class = 'form-check-input subSelect' id = 'subSelectPlaceHolder' value = ''>Select Subject </option>"
         $.each(subjectRadio, function (index, option) {
             radioHtml += "<option class = 'form-check-input subSelect' id = '" + option.id + "'value = '" + option.value + "'>";
             radioHtml += "" + option.label + '</option>';
@@ -47,7 +48,7 @@ $(document).ready(function () {
 
         $("#subSelectContainer").change(function () {
             subSelect = $(this).val();
-
+            $("#subSelectPlaceHolder").remove();
             // Uploading to respective subject message
             $("#uploadMessage").show();
             $("#uploadMessage").text("You are uploading to " + userDetails["subjectName"][yearSelectIndex][subSelect] + "(" + userDetails["subjectCode"][yearSelectIndex][subSelect] + ")")
@@ -137,7 +138,7 @@ $(document).ready(function () {
 
         //Deals with file Upload AJAX
         $("#uploadForm").submit(function (e) {
-            e.preventDefault();
+            e.prevenDefault();
             $("#submitButton").prop("disabled", true);
             $("#uploadDate").val("0");
 
@@ -161,10 +162,11 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     if (response.success) {
-                        $("#responseMessage").text(response.message);
+                        let html = "";
+                        html += "<strong>" + response.message + "</strong>";
+                        $("#responseMessage").html(html)
+                        $("#responseMessage").show();
                         $("#fullAttendence").show();
-                    } else {
-                        $("#responseMessage").text("error php sidee");
                     }
                 },
                 error: function () {
@@ -184,6 +186,7 @@ $(document).ready(function () {
 
                 $("#attendenceLog").load("../utilityFiles/facultyAttendencelog.php", attendenceLog);
             })
+
         })
     }
 })
