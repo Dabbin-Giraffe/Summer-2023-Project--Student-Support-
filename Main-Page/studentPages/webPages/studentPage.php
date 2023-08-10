@@ -32,6 +32,7 @@ $semesterCount = $student->semesterCount;
     <title>Document</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../utilityFiles/studentPageStyle.css?v=4">
     <script>
         let semesterCount = `<?php echo $semesterCount; ?>`;
         let subjectName = JSON.parse('<?php echo $student->jsonEncoder($student->subjectName); ?>');

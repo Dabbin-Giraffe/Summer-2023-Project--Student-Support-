@@ -67,9 +67,21 @@ function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRe
     $stmt->close();
 
     $presentPercentage = round(($present / $classesconducted) * 100, 2);
+    $class = "";
+    if ($presentPercentage < $minimumRequired[$selectSem - 1][$i]) {
+        $leftClasses = $maxClasses[$selectSem - 1][$i] - $classesconducted;
+        if ($leftClasses > 0) {
+            $maxPresent = $leftClasses + $present;
+            $maxPercent = round(($maxPresent / $maxClasses[$selectSem - 1][$i]) * 100, 2);
+            if($maxPercent < $minimumRequired[$selectSem - 1][$i]){
+                $class = "red";
+            }else {
+                $class = "orange";
+            }
+        }
+    }
 
-
-    echo "<tr class='subjectLog' id='" . $subjectCode[$selectSem - 1][$i] . "'>";
+    echo "<tr class='subjectLog ".$class."' id='" . $subjectCode[$selectSem - 1][$i] . "'>";
     echo "<td>" . $subjectCode[$selectSem - 1][$i] . "</td>";
     //This is related to the "all" selector, adds classes and ids depeding on this "all" thing
     if ($selectSub != -1) {
