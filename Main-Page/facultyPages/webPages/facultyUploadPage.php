@@ -27,15 +27,27 @@ $userDetails = $faculty->getUserdetails();
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
     <script src="facultyUpload.js?v=3"></script>
-    <link rel="stylesheet" href="facultyNavbarStyle.css?v=3">
+    <link rel="stylesheet" href="facultyNavbarStyle.css?v=4">
 
 </head>
 
-<?php
-include "navbar.php"
-?>
-
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="facultyUploadPage.php">Upload Page</a></li>
+                <li>
+                    <a href="#">Edit attendence ▾</a>
+                    <ul class="dropdown">
+                        <li><a href="facultyFetchPage.php">Fetch Details</a></li>
+                        <li><a href="editAttendencePage.php">Edit attendance</a></li>
+                    </ul>
+                </li>
+                <li class="logout"><a href="../../loginPages/logout.php">Logout</a></li>
+            </ul>
+        </nav>
+        <h2 style="margin: 20px;">Upload</h2>
+    </header>
     <div class="container mt-5">
         <div class="form-group">
             <div class="row">

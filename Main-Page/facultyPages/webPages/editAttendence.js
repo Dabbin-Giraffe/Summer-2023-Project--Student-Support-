@@ -152,7 +152,13 @@ $(document).ready(function () {
                 processData: false,
                 success: function (response) {
                     if (response.success) {
-                        console.log("heya");
+                        let html = "";
+                        html += "<strong>" + response.message + "</strong>";
+                        $("#detailsContainer").html(html)
+                        $("#detailsContainer").show();
+                        $("#submitButton").prop("disabled", false);
+                        
+                        console.log(response.finalResult);
                     }
                 },
                 error: function (xhr, status, error) {

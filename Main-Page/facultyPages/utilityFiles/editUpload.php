@@ -39,16 +39,16 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
             $finalResult =  fetchDetails($conn, $studentID, $date, $subjectID, $flag, $attendence, $studentName);
 
-            // $response = [
-            //     "success" => true,
-            //     "message" => "[" . $date . "] : successfully uploaded attendence data of " . count($editedVals["editAttendence"]) . " students for " . $subjectName . "(" . $subjectID . ")",
-            //     "finalResult" => $finalResult
-            // ];
-
             $response = [
                 "success" => true,
-                "finalResult" =>"suc"
+                "message" => "[" . $date . "] : successfully uploaded attendence data of students for " . $subjectName . "(" . $subjectID . ")",
+                "finalResult" => $finalResult
             ];
+
+            // $response = [
+            //     "success" => true,
+            //     "finalResult" =>"suc"
+            // ];
 
             header('Content-Type: application/json');
             echo json_encode($response);

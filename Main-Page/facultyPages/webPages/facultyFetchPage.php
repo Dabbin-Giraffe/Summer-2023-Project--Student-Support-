@@ -21,7 +21,7 @@ $userDetails = $faculty->getUserdetails();
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
     <script src="facultyFetch.js?v=5"></script>
-    <link rel="stylesheet" href="facultyNavbarStyle.css?v=1">
+    <link rel="stylesheet" href="facultyNavbarStyle.css?v=2">
     <style>
         .searchHidden {
             display: none;
@@ -30,11 +30,25 @@ $userDetails = $faculty->getUserdetails();
     <title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<?php
-include "navbar.php"
-?>
+
 
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="facultyUploadPage.php">Upload Page</a></li>
+                <li>
+                    <a href="#">Edit attendence ▾</a>
+                    <ul class="dropdown">
+                        <li><a href="facultyFetchPage.php">Fetch Details</a></li>
+                        <li><a href="editAttendencePage.php">Edit attendance</a></li>
+                    </ul>
+                </li>
+                <li class="logout"><a href="../../loginPages/logout.php">Logout</a></li>
+            </ul>
+        </nav>
+        <h2 style="margin-left: 20px;">Fetch Attendence</h2>
+    </header>
     <div class="container mt-5">
         <div class="form-group">
             <div class="row">
