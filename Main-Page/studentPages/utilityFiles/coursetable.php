@@ -80,7 +80,6 @@ function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRe
             }
         }
     }
-
     echo "<tr class='subjectLog ".$class."' id='" . $subjectCode[$selectSem - 1][$i] . "'>";
     echo "<td>" . $subjectCode[$selectSem - 1][$i] . "</td>";
     //This is related to the "all" selector, adds classes and ids depeding on this "all" thing
@@ -93,8 +92,8 @@ function generateTable($conn, $selectSem, $subjectCode, $subjectName, $minimumRe
     echo "<td>" . $present . "</td>";
     echo "<td>" . $classesconducted . "</td>";
     echo "<td>" . $presentPercentage . "</td>";
-    echo "<td>" . $minimumRequired[$selectSem - 1][$i] . "</td>";
+    echo "<td>" . $minimumRequired[$selectSem - 1][$i]. "</td>";
     echo "<td>" . $maxClasses[$selectSem - 1][$i] . "</td>";
     echo  "</tr>";
 }
-?>
+?> 

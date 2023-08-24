@@ -20,14 +20,13 @@ $userDetails = $faculty->getUserdetails();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://www.StudentSupport.com/upload.php">
     <title>Document</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
         let userDetails = JSON.parse('<?php echo $faculty->jsonEncoder($userDetails); ?>')
     </script>
-    <script src="facultyUpload.js?v=3"></script>
+    <script src="facultyUpload.js?v=7"></script>
     <link rel="stylesheet" href="facultyNavbarStyle.css?v=6">
 
 </head>
@@ -70,9 +69,7 @@ $userDetails = $faculty->getUserdetails();
                     }
                     ?>
                 </div>
-
                 <div id="subSelect" style="display: none;" class="col-md-7"></div>
-
             </div>
         </div>
         <div id="uploadMessage" style="display: none;" class="alert alert-info mt-3"></div>

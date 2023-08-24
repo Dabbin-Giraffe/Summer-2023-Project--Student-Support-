@@ -138,7 +138,7 @@ $(document).ready(function () {
 
         //Deals with file Upload AJAX
         $("#uploadForm").submit(function (e) {
-            e.prevenDefault();
+            e.preventDefault();
             $("#submitButton").prop("disabled", true);
             $("#uploadDate").val("0");
 
