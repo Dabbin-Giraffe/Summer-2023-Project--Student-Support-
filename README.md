@@ -7,3 +7,4 @@ PHP, Jquery, JavaScript, Bootstrap.
 Uses a basic regular expression check for front-end verification. Compares the database to identify the type of account and displays content accordingly.
 - A verified admin account has access to all their students' data with privilages to add, delete and modify.
 - A verified student account has access to view all their attendance data for all their semesters. 
+- Database of choise is MySQL. Apache server to connect to the database and manage API calls.
